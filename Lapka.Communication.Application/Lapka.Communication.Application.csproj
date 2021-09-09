@@ -20,6 +20,8 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Commands\Handlers" />
+      <Folder Include="Events\Concrete" />
       <Folder Include="Services\Responses\" />
     </ItemGroup>
 
