@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+service MessageProto{
+  rpc SendMessageToShelterToAdoptPet (SendMessageToShelterToAdoptPetRequest) returns (SendMessageToShelterToAdoptPetReply);
+}
+
+message SendMessageToShelterToAdoptPetRequest{
+  string shelterId = 1;
+  string petId = 2;
+  string description = 3;
+  string fullName = 4;
+  string phoneNumber = 5;
+}
+
+message SendMessageToShelterToAdoptPetReply{}

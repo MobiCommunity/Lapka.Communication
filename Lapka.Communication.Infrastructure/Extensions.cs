@@ -8,8 +8,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using Convey.Persistence.MongoDB;
 using Lapka.Communication.Application.Events.Abstract;
 using Lapka.Communication.Application.Services;
+using Lapka.Communication.Infrastructure.Documents;
 using Lapka.Communication.Infrastructure.Exceptions;
 using Lapka.Communication.Infrastructure.Services;
 
@@ -26,8 +28,9 @@ namespace Lapka.Communication.Infrastructure
                 .AddHttpClient()
                 .AddErrorHandler<ExceptionToResponseMapper>()
                 .AddExceptionToMessageMapper<ExceptionToMessageMapper>()
+                .AddMongo()
+                .AddMongoRepository<AdoptPetMessageDocument, Guid>("AdoptPetMessages")
                 // .AddRabbitMq()
-                // .AddMongo()
                 // .AddConsul()
                 // .AddFabio()
                 // .AddMessageOutbox()

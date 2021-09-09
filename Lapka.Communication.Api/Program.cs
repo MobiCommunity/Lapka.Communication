@@ -13,8 +13,10 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using Lapka.Communication.Api.Attributes;
+using Lapka.Communication.Api.Grpc.Controllers;
 using Lapka.Communication.Application;
 using Lapka.Communication.Infrastructure;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 namespace Lapka.Communication.Api
 {
@@ -26,7 +28,11 @@ namespace Lapka.Communication.Api
         }
 
         private static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args).ConfigureServices(services =>
+            WebHost.CreateDefaultBuilder(args).ConfigureKestrel(options =>
+                {
+                    options.ListenAnyIP(5004, o => o.Protocols = HttpProtocols.Http1);
+                    options.ListenAnyIP(5014, o => o.Protocols = HttpProtocols.Http2);
+                }).ConfigureServices(services =>
                 {
                     services.AddControllers();
 
@@ -36,6 +42,9 @@ namespace Lapka.Communication.Api
                         .AddConvey()
                         .AddInfrastructure()
                         .AddApplication();
+                    
+                    AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
+                    services.AddGrpc();
 
                     services.AddSwaggerGen(c =>
                     {
@@ -43,7 +52,7 @@ namespace Lapka.Communication.Api
                         c.SwaggerDoc("v1", new OpenApiInfo
                         {
                             Version = "v1",
-                            Title = "lapka.communication Microservice",
+                            Title = "Communication Microservice",
                             Description = ""
                         });
                         string xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
@@ -62,15 +71,16 @@ namespace Lapka.Communication.Api
                         .UseConvey()
                         .UseInfrastructure()
                         .UseRouting()
-                        .UseSwagger(c => { c.RouteTemplate = "api/lapka.communication/swagger/{documentname}/swagger.json"; })
+                        .UseSwagger(c => { c.RouteTemplate = "api/communication/swagger/{documentname}/swagger.json"; })
                         .UseSwaggerUI(c =>
                         {
-                            c.SwaggerEndpoint("/api/lapka.communication/swagger/v1/swagger.json", "My API V1");
-                            c.RoutePrefix = "api/lapka.communication/swagger";
+                            c.SwaggerEndpoint("/api/communication/swagger/v1/swagger.json", "My API V1");
+                            c.RoutePrefix = "api/communication/swagger";
                         })
                         .UseEndpoints(e =>
                         {
                             e.MapControllers();
+                            e.MapGrpcService<GrpcMessageController>();
                             e.Map("ping", async ctx => { await ctx.Response.WriteAsync("Alive"); });
                         });
                 })
