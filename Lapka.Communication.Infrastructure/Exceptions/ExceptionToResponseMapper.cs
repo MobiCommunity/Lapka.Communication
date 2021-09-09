@@ -16,12 +16,24 @@ namespace Lapka.Communication.Infrastructure.Exceptions
 
                 AppException ex => ex switch
                 {
-                    ValueNotFoundException valueNotFoundException => 
+                    UserDoesNotOwnMessageException userDoesNotOwnMessageException => 
                         new ExceptionResponse (new
                         {
-                            code = valueNotFoundException.Code,
-                            reason = valueNotFoundException.Message
+                            code = userDoesNotOwnMessageException.Code,
+                            reason = userDoesNotOwnMessageException.Message
+                        },HttpStatusCode.Forbidden),
+                    MessageNotFoundException messageNotFoundException => 
+                        new ExceptionResponse (new
+                        {
+                            code = messageNotFoundException.Code,
+                            reason = messageNotFoundException.Message
                         },HttpStatusCode.NotFound),
+                    UserNotOwnerOfShelterException userNotOwnerOfShelterException => 
+                        new ExceptionResponse (new
+                        {
+                            code = userNotOwnerOfShelterException.Code,
+                            reason = userNotOwnerOfShelterException.Message
+                        },HttpStatusCode.Forbidden),
                     _ => new ExceptionResponse(
                         new
                         {
