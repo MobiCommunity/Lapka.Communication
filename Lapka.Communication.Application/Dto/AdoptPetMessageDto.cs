@@ -1,9 +1,8 @@
 ﻿using System;
-using Convey.Types;
 
-namespace Lapka.Communication.Infrastructure.Documents
+namespace Lapka.Communication.Application.Dto
 {
-    public class AdoptPetMessageDocument : IIdentifiable<Guid>
+    public class AdoptPetMessageDto
     {
         public Guid Id { get; set; }
         public Guid UserId { get; set; }

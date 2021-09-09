@@ -30,12 +30,11 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Controllers" />
       <Folder Include="Models\Response\" />
     </ItemGroup>
 
     <ItemGroup>
-        <Protobuf Include="gRPC\Protos\message.proto" GrpcServices="Server" />
+        <Protobuf Include="Grpc\Protos\message.proto" GrpcServices="Server" />
     </ItemGroup>
 
 
