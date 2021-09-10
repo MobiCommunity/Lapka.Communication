@@ -75,12 +75,12 @@ namespace Lapka.Communication.Api.Controllers
 
             Guid id = Guid.NewGuid();
 
-            await _commandDispatcher.SendAsync(new CreateAdoptPetMessage(id, userId, message.ShelterId, message.PetId,
-                message.Description, message.FullName, message.PhoneNumber));
+            await _commandDispatcher.SendAsync(new CreateAdoptPetMessage(id, userId, message.PetId, message.Description,
+                message.FullName, message.PhoneNumber));
 
             return Created($"api/message/{id}/adopt", null);
         }
-        
+
         /// <summary>
         /// Deletes a adopt pet message
         /// </summary>
@@ -97,7 +97,5 @@ namespace Lapka.Communication.Api.Controllers
 
             return NoContent();
         }
-        
-
     }
 }

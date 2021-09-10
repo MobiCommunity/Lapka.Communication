@@ -7,6 +7,5 @@ namespace Lapka.Communication.Application.Services
     {
         Task<bool> IsUserOwnerOfShelterAsync(Guid shelterId, Guid userId);
         Task<Guid> ClosestShelterAsync(string longitude, string latitude);
-        Task<bool> DoesShelterExistsAsync(Guid shelterId);
     }
 }
