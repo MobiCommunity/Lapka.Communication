@@ -16,6 +16,18 @@ namespace Lapka.Communication.Infrastructure.Exceptions
 
                 AppException ex => ex switch
                 {
+                    PetDoesNotExistsException petDoesNotExistsException => 
+                        new ExceptionResponse (new
+                        {
+                            code = petDoesNotExistsException.Code,
+                            reason = petDoesNotExistsException.Message
+                        },HttpStatusCode.NotFound),
+                    ShelterDoesNotExistsException shelterDoesNotExistsException => 
+                        new ExceptionResponse (new
+                        {
+                            code = shelterDoesNotExistsException.Code,
+                            reason = shelterDoesNotExistsException.Message
+                        },HttpStatusCode.NotFound),
                     CannotRequestIdentityMicroserviceException cannotRequestIdentityMicroserviceException => 
                         new ExceptionResponse (new
                         {

@@ -38,8 +38,7 @@ namespace Lapka.Communication.Infrastructure.Queries.Handlers
                 {
                     ConversationId = conversation.Id,
                     LastMessage = lastMessage.Message,
-                    LastMessageCreation = lastMessage.CreatedAt,
-                    ReceiverUserId = conversation.Members.FirstOrDefault(x => x != query.UserId)
+                    LastMessageCreation = lastMessage.CreatedAt
                 });
             }
 
