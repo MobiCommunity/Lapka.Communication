@@ -15,6 +15,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Lapka.Communication.Application;
 using Lapka.Communication.Infrastructure;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 namespace Lapka.Communication.Api
 {
@@ -26,7 +27,11 @@ namespace Lapka.Communication.Api
         }
 
         private static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args).ConfigureServices(services =>
+            WebHost.CreateDefaultBuilder(args).ConfigureKestrel(options =>
+            {
+                options.ListenAnyIP(5004, o => o.Protocols = HttpProtocols.Http1);
+                options.ListenAnyIP(5014, o => o.Protocols = HttpProtocols.Http2);
+            }).ConfigureServices(services =>
                 {
                     services.AddControllers();
 
