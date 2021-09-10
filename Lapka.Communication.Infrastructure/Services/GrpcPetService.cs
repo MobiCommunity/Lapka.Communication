@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Lapka.Communication.Application.Exceptions;
 using Lapka.Communication.Application.Services;
 
 namespace Lapka.Communication.Infrastructure.Services
@@ -13,14 +14,20 @@ namespace Lapka.Communication.Infrastructure.Services
             _client = client;
         }
         
-        public async Task<bool> DoesPetExists(Guid petId)
+        public async Task<Guid> GetShelterId(Guid petId)
         {
-            DoesPetExistsReply response = await _client.DoesPetExistsAsync(new DoesPetExistsRequest
+            GetPetsShelterReply response = await _client.GetPetsShelterAsync(new GetPetsShelterRequest
             {
                 PetId = petId.ToString()
             });
 
-            return response.DoesExists;
+            if(!Guid.TryParse(response.ShelterId, out Guid shelterId))
+            {
+                throw new PetDoesNotExistsException(petId);
+            }
+
+            return shelterId;
+            
         }
     }
 }

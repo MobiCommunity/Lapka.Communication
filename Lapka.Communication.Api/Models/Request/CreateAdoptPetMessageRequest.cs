@@ -4,7 +4,6 @@ namespace Lapka.Communication.Api.Models.Request
 {
     public class CreateAdoptPetMessageRequest
     {
-        public Guid ShelterId { get; set; }
         public Guid PetId { get; set; }
         public string Description { get; set; }
         public string FullName { get; set; }
