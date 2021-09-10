@@ -28,7 +28,7 @@ namespace Lapka.Communication.Application.Commands.Handlers
 
         public async Task HandleAsync(CreateReportStrayPet command)
         {
-            Guid shelterId = await GetShelterIdAsync(command);
+            Guid shelterId = await GetClosestShelterIdAsync(command);
 
             StrayPetMessage message = StrayPetMessage.Create(command.Id, command.UserId, shelterId,
                 command.Photos.IdsAsGuidList(), command.Description, command.ReporterName, command.ReporterPhoneNumber);
@@ -38,9 +38,9 @@ namespace Lapka.Communication.Application.Commands.Handlers
             await _eventProcessor.ProcessAsync(message.Events);
         }
 
-        private async Task<Guid> GetShelterIdAsync(CreateReportStrayPet command)
+        private async Task<Guid> GetClosestShelterIdAsync(CreateReportStrayPet command)
         {
-            Guid shelterId = Guid.Empty;
+            Guid shelterId;
 
             try
             {

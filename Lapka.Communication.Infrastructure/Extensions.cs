@@ -61,6 +61,7 @@ namespace Lapka.Communication.Infrastructure
 
             services.AddTransient<IGrpcIdentityService, GrpcIdentityService>();
             services.AddTransient<IGrpcPhotoService, GrpcPhotoService>();
+            services.AddTransient<IGrpcPetService, GrpcPetService>();
             services.AddTransient<IAdoptPetMessageRepository, AdoptPetMessageRepository>();
             services.AddTransient<IStrayPetMessageRepository, StrayPetMessageRepository>();
             services.AddTransient<IUserConversationRepository, UserConversationRepository>();
@@ -79,6 +80,10 @@ namespace Lapka.Communication.Infrastructure
             configuration.GetSection("identityMicroservice").Bind(identityMicroserviceOptions);
             services.AddSingleton(identityMicroserviceOptions);
             
+            PetsMicroserviceOptions petsMicroserviceOptions = new PetsMicroserviceOptions();
+            configuration.GetSection("petsMicroservice").Bind(petsMicroserviceOptions);
+            services.AddSingleton(petsMicroserviceOptions);
+            
             services.AddGrpcClient<PhotoProto.PhotoProtoClient>(o =>
             {
                 o.Address = new Uri(filesMicroserviceOptions.UrlHttp2);
@@ -87,6 +92,11 @@ namespace Lapka.Communication.Infrastructure
             services.AddGrpcClient<IdentityProto.IdentityProtoClient>(o =>
             {
                 o.Address = new Uri(identityMicroserviceOptions.UrlHttp2);
+            });
+            
+            services.AddGrpcClient<IdentityProto.IdentityProtoClient>(o =>
+            {
+                o.Address = new Uri(petsMicroserviceOptions.UrlHttp2);
             });
 
             builder.Services.Scan(s => s.FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())

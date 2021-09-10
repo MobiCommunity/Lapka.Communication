@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+service PetProto{
+  rpc GetShelterPetsCount (GetShelterPetsCountRequest) returns (GetShelterPetsCountReply);
+  rpc DoesPetExists (DoesPetExistsRequest) returns (DoesPetExistsReply);
+}
+
+message DoesPetExistsRequest{
+  string petId = 1;
+}
+
+message GetShelterPetsCountRequest{
+  string shelterId = 1;
+}
+
+message GetShelterPetsCountReply{
+  int32 count = 1;
+}
+
+message DoesPetExistsReply{
+  bool doesExists = 1;
+}
