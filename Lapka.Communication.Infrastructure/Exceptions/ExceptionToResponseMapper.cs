@@ -16,6 +16,24 @@ namespace Lapka.Communication.Infrastructure.Exceptions
 
                 AppException ex => ex switch
                 {
+                    CannotRequestIdentityMicroserviceException cannotRequestIdentityMicroserviceException => 
+                        new ExceptionResponse (new
+                        {
+                            code = cannotRequestIdentityMicroserviceException.Code,
+                            reason = cannotRequestIdentityMicroserviceException.Message
+                        },HttpStatusCode.InternalServerError),
+                    ErrorDuringFindingClosestShelterException errorDuringFindingClosestShelterException => 
+                        new ExceptionResponse (new
+                        {
+                            code = errorDuringFindingClosestShelterException.Code,
+                            reason = errorDuringFindingClosestShelterException.Message
+                        },HttpStatusCode.InternalServerError),
+                    CannotRequestFilesMicroserviceException cannotRequestFilesMicroserviceException => 
+                        new ExceptionResponse (new
+                        {
+                            code = cannotRequestFilesMicroserviceException.Code,
+                            reason = cannotRequestFilesMicroserviceException.Message
+                        },HttpStatusCode.InternalServerError),
                     ConversationNotFoundException conversationNotFoundException => 
                         new ExceptionResponse (new
                         {

@@ -23,7 +23,7 @@ namespace Lapka.Communication.Infrastructure.Services
             return response.IsOwner;
         }
 
-        public async Task<Guid> ClosestShelter(string longitude, string latitude)
+        public async Task<Guid> ClosestShelterAsync(string longitude, string latitude)
         {
             GetClosestShelterReply response = await _client.GetClosestShelterAsync(new GetClosestShelterRequest
             {

@@ -22,7 +22,7 @@ namespace Lapka.Communication.Infrastructure.Services
         {
             AdoptPetMessageDocument message = await _repository.GetAsync(x => x.Id == messageId);
 
-            return message.AsBusiness();
+            return message?.AsBusiness();
         }
 
         public async Task<IEnumerable<AdoptPetMessage>> GetAllAsync(Guid shelterId)
