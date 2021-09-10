@@ -31,10 +31,10 @@ namespace Lapka.Communication.Core.Entities
         public static AdoptPetMessage Create(Guid id, Guid userId, Guid shelterId, Guid petId, string description, string fullName,
             string phoneNumber)
         {
-            AdoptPetMessage photo = new AdoptPetMessage(id, userId, shelterId, petId, description, fullName, phoneNumber, DateTime.Now);
+            AdoptPetMessage message = new AdoptPetMessage(id, userId, shelterId, petId, description, fullName, phoneNumber, DateTime.Now);
 
-            photo.AddEvent(new AdoptPetMessageCreated(photo));
-            return photo;
+            message.AddEvent(new AdoptPetMessageCreated(message));
+            return message;
         }
 
         public void Delete()

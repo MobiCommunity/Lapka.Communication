@@ -15,18 +15,21 @@ namespace Lapka.Communication.Api.Controllers
 {
     [ApiController]
     [Route("api/message")]
-    public class MessageController : ControllerBase
+    public class AdoptMessageController : ControllerBase
     {
         private readonly ICommandDispatcher _commandDispatcher;
         private readonly IQueryDispatcher _queryDispatcher;
 
-        public MessageController(ICommandDispatcher commandDispatcher, IQueryDispatcher queryDispatcher)
+        public AdoptMessageController(ICommandDispatcher commandDispatcher, IQueryDispatcher queryDispatcher)
         {
             _commandDispatcher = commandDispatcher;
             _queryDispatcher = queryDispatcher;
         }
 
-        [HttpGet("{id:guid}")]
+        /// <summary>
+        /// Gets adoption message 
+        /// </summary>
+        [HttpGet("{id:guid}/adopt")]
         public async Task<IActionResult> Get(Guid id)
         {
             Guid userId = await HttpContext.AuthenticateUsingJwtGetUserIdAsync();
@@ -42,6 +45,9 @@ namespace Lapka.Communication.Api.Controllers
             }));
         }
         
+        /// <summary>
+        /// Get all shelters messages
+        /// </summary>
         [HttpGet("shelter/{id:guid}")]
         public async Task<IActionResult> GetShelterMessages(Guid id)
         {
@@ -57,9 +63,11 @@ namespace Lapka.Communication.Api.Controllers
                 UserId = userId
             }));
         }
-
-
-        [HttpPost]
+        
+        /// <summary>
+        /// Creates message for adoption
+        /// </summary>
+        [HttpPost("adopt")]
         public async Task<IActionResult> Add([FromBody] CreateAdoptPetMessageRequest message)
         {
             Guid userId = await HttpContext.AuthenticateUsingJwtGetUserIdAsync();

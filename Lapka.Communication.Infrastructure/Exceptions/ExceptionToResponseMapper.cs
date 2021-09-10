@@ -16,6 +16,18 @@ namespace Lapka.Communication.Infrastructure.Exceptions
 
                 AppException ex => ex switch
                 {
+                    ConversationNotFoundException conversationNotFoundException => 
+                        new ExceptionResponse (new
+                        {
+                            code = conversationNotFoundException.Code,
+                            reason = conversationNotFoundException.Message
+                        },HttpStatusCode.NotFound),
+                    UserDoesNotOwnConversationException userDoesNotOwnConversationException => 
+                        new ExceptionResponse (new
+                        {
+                            code = userDoesNotOwnConversationException.Code,
+                            reason = userDoesNotOwnConversationException.Message
+                        },HttpStatusCode.Forbidden),
                     UserDoesNotOwnMessageException userDoesNotOwnMessageException => 
                         new ExceptionResponse (new
                         {

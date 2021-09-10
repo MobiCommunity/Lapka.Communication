@@ -37,6 +37,7 @@ namespace Lapka.Communication.Infrastructure
                 .AddExceptionToMessageMapper<ExceptionToMessageMapper>()
                 .AddMongo()
                 .AddMongoRepository<AdoptPetMessageDocument, Guid>("adoptpetmessage")
+                .AddMongoRepository<UserConversationDocument, Guid>("usersconversations")
                 .AddJwt()
                 // .AddRabbitMq()
                 // .AddConsul()
@@ -59,6 +60,7 @@ namespace Lapka.Communication.Infrastructure
 
             services.AddTransient<IGrpcIdentityService, GrpcIdentityService>();
             services.AddTransient<IAdoptPetMessageRepository, AdoptPetMessageRepository>();
+            services.AddTransient<IUserConversationRepository, UserConversationRepository>();
 
             services.AddSingleton<IExceptionToResponseMapper, ExceptionToResponseMapper>();
             services.AddSingleton<IDomainToIntegrationEventMapper, DomainToIntegrationEventMapper>();
