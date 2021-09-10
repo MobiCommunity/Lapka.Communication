@@ -38,5 +38,16 @@ namespace Lapka.Communication.Infrastructure.Services
 
             return shelterId;
         }
+
+        public async Task<bool> DoesShelterExists(Guid shelterId)
+        {
+            
+            DoesShelterExistsReply response = await _client.DoesShelterExistsAsync(new DoesShelterExistsRequest
+            {
+                ShelterId = shelterId.ToString()
+            });
+
+            return response.DoesExists;
+        }
     }
 }

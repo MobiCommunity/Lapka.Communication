@@ -80,6 +80,42 @@ namespace Lapka.Communication.Infrastructure.Documents
                 CreatedAt = message.CreatedAt
             };
         }
+        
+        public static HelpShelterMessage AsBusiness(this HelpShelterMessageDocument message)
+        {
+            return new HelpShelterMessage(message.Id, message.UserId, message.ShelterId, message.HelpType,
+                message.Description, message.FullName, message.PhoneNumber, message.CreatedAt);
+        }
+
+        public static HelpShelterMessageDocument AsDocument(this HelpShelterMessage message)
+        {
+            return new HelpShelterMessageDocument
+            {
+                Id = message.Id.Value,
+                UserId = message.UserId,
+                ShelterId = message.ShelterId,
+                HelpType = message.HelpType,
+                Description = message.Description,
+                FullName = message.FullName,
+                PhoneNumber = message.PhoneNumber,
+                CreatedAt = message.CreatedAt
+            };
+        }
+
+        public static HelpShelterMessageDto AsDto(this HelpShelterMessageDocument message)
+        {
+            return new HelpShelterMessageDto
+            {
+                Id = message.Id,
+                UserId = message.UserId,
+                ShelterId = message.ShelterId,
+                HelpType = message.HelpType,
+                Description = message.Description,
+                FullName = message.FullName,
+                PhoneNumber = message.PhoneNumber,
+                CreatedAt = message.CreatedAt
+            };
+        }
 
         public static UserDetailedConversationDto AsDto(this UserConversationDocument message, Guid userId)
         {
