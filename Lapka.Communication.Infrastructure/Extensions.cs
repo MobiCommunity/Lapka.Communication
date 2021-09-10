@@ -94,7 +94,7 @@ namespace Lapka.Communication.Infrastructure
                 o.Address = new Uri(identityMicroserviceOptions.UrlHttp2);
             });
             
-            services.AddGrpcClient<IdentityProto.IdentityProtoClient>(o =>
+            services.AddGrpcClient<PetProto.PetProtoClient>(o =>
             {
                 o.Address = new Uri(petsMicroserviceOptions.UrlHttp2);
             });
