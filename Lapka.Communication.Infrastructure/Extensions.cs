@@ -47,12 +47,12 @@ namespace Lapka.Communication.Infrastructure
                 // .AddMetrics()
                 ;
             
-            AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
-
             builder.Services.Configure<KestrelServerOptions>
                 (o => o.AllowSynchronousIO = true);
-
+            
             builder.Services.Configure<IISServerOptions>(o => o.AllowSynchronousIO = true);
+            
+            AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
 
             IServiceCollection services = builder.Services;
             
