@@ -37,6 +37,7 @@ namespace Lapka.Communication.Infrastructure
                 .AddExceptionToMessageMapper<ExceptionToMessageMapper>()
                 .AddMongo()
                 .AddMongoRepository<AdoptPetMessageDocument, Guid>("adoptpetmessage")
+                .AddMongoRepository<StrayPetMessageDocument, Guid>("straypetmessage")
                 .AddMongoRepository<UserConversationDocument, Guid>("usersconversations")
                 .AddJwt()
                 // .AddRabbitMq()
@@ -59,7 +60,9 @@ namespace Lapka.Communication.Infrastructure
             IConfiguration configuration = provider.GetService<IConfiguration>();
 
             services.AddTransient<IGrpcIdentityService, GrpcIdentityService>();
+            services.AddTransient<IGrpcPhotoService, GrpcPhotoService>();
             services.AddTransient<IAdoptPetMessageRepository, AdoptPetMessageRepository>();
+            services.AddTransient<IStrayPetMessageRepository, StrayPetMessageRepository>();
             services.AddTransient<IUserConversationRepository, UserConversationRepository>();
 
             services.AddSingleton<IExceptionToResponseMapper, ExceptionToResponseMapper>();
@@ -68,9 +71,18 @@ namespace Lapka.Communication.Infrastructure
             services.AddTransient<IEventProcessor, EventProcessor>();
             services.AddTransient<IMessageBroker, DummyMessageBroker>();
             
+            FilesMicroserviceOptions filesMicroserviceOptions = new FilesMicroserviceOptions();
+            configuration.GetSection("filesMicroservice").Bind(filesMicroserviceOptions);
+            services.AddSingleton(filesMicroserviceOptions);
+            
             IdentityMicroserviceOptions identityMicroserviceOptions = new IdentityMicroserviceOptions();
             configuration.GetSection("identityMicroservice").Bind(identityMicroserviceOptions);
             services.AddSingleton(identityMicroserviceOptions);
+            
+            services.AddGrpcClient<PhotoProto.PhotoProtoClient>(o =>
+            {
+                o.Address = new Uri(filesMicroserviceOptions.UrlHttp2);
+            });
             
             services.AddGrpcClient<IdentityProto.IdentityProtoClient>(o =>
             {

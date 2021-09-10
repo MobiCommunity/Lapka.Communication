@@ -6,6 +6,6 @@ namespace Lapka.Communication.Application.Services
     public interface IGrpcIdentityService
     {
         Task<bool> IsUserOwnerOfShelterAsync(Guid shelterId, Guid userId);
-        Task<Guid> ClosestShelter(string longitude, string latitude);
+        Task<Guid> ClosestShelterAsync(string longitude, string latitude);
     }
 }
