@@ -21,13 +21,20 @@ namespace Lapka.Communication.Infrastructure.Services
                 PetId = petId.ToString()
             });
 
-            if(!Guid.TryParse(response.ShelterId, out Guid shelterId))
+            Guid shelterId = GetShelterIdAsGuid(petId, response.ShelterId);
+
+            return shelterId;
+            
+        }
+
+        private static Guid GetShelterIdAsGuid(Guid petId, string unconvertedShelterId)
+        {
+            if (!Guid.TryParse(unconvertedShelterId, out Guid shelterId))
             {
                 throw new PetDoesNotExistsException(petId);
             }
 
             return shelterId;
-            
         }
     }
 }

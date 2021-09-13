@@ -12,7 +12,8 @@ namespace Lapka.Communication.Infrastructure.Documents
         public static AdoptPetMessage AsBusiness(this AdoptPetMessageDocument message)
         {
             return new AdoptPetMessage(message.Id, message.UserId, message.ShelterId, message.PetId,
-                message.Description, message.FullName, message.PhoneNumber, message.CreatedAt);
+                new MessageDescription(message.Description), new FullName(message.FullName),
+                new PhoneNumber(message.PhoneNumber), message.CreatedAt);
         }
 
         public static AdoptPetMessageDocument AsDocument(this AdoptPetMessage message)
@@ -23,9 +24,9 @@ namespace Lapka.Communication.Infrastructure.Documents
                 UserId = message.UserId,
                 ShelterId = message.ShelterId,
                 PetId = message.PetId,
-                Description = message.Description,
-                FullName = message.FullName,
-                PhoneNumber = message.PhoneNumber,
+                Description = message.Description.Value,
+                FullName = message.FullName.Value,
+                PhoneNumber = message.PhoneNumber.Value,
                 CreatedAt = message.CreatedAt
             };
         }
@@ -44,11 +45,12 @@ namespace Lapka.Communication.Infrastructure.Documents
                 CreatedAt = message.CreatedAt
             };
         }
-        
+
         public static StrayPetMessage AsBusiness(this StrayPetMessageDocument message)
         {
             return new StrayPetMessage(message.Id, message.UserId, message.ShelterId, message.PhotoIds,
-                message.Description, message.FullName, message.PhoneNumber, message.CreatedAt);
+                new MessageDescription(message.Description), new FullName(message.FullName),
+                new PhoneNumber(message.PhoneNumber), message.CreatedAt);
         }
 
         public static StrayPetMessageDocument AsDocument(this StrayPetMessage message)
@@ -59,9 +61,9 @@ namespace Lapka.Communication.Infrastructure.Documents
                 UserId = message.UserId,
                 ShelterId = message.ShelterId,
                 PhotoIds = message.PhotoIds,
-                Description = message.Description,
-                FullName = message.FullName,
-                PhoneNumber = message.PhoneNumber,
+                Description = message.Description.Value,
+                FullName = message.FullName.Value,
+                PhoneNumber = message.PhoneNumber.Value,
                 CreatedAt = message.CreatedAt
             };
         }
@@ -80,11 +82,12 @@ namespace Lapka.Communication.Infrastructure.Documents
                 CreatedAt = message.CreatedAt
             };
         }
-        
+
         public static HelpShelterMessage AsBusiness(this HelpShelterMessageDocument message)
         {
             return new HelpShelterMessage(message.Id, message.UserId, message.ShelterId, message.HelpType,
-                message.Description, message.FullName, message.PhoneNumber, message.CreatedAt);
+                new MessageDescription(message.Description), new FullName(message.FullName),
+                new PhoneNumber(message.PhoneNumber), message.CreatedAt);
         }
 
         public static HelpShelterMessageDocument AsDocument(this HelpShelterMessage message)
@@ -95,9 +98,9 @@ namespace Lapka.Communication.Infrastructure.Documents
                 UserId = message.UserId,
                 ShelterId = message.ShelterId,
                 HelpType = message.HelpType,
-                Description = message.Description,
-                FullName = message.FullName,
-                PhoneNumber = message.PhoneNumber,
+                Description = message.Description.Value,
+                FullName = message.FullName.Value,
+                PhoneNumber = message.PhoneNumber.Value,
                 CreatedAt = message.CreatedAt
             };
         }
@@ -164,6 +167,19 @@ namespace Lapka.Communication.Infrastructure.Documents
                 Message = message.Message,
                 CreatedAt = message.CreatedAt,
                 IsUserSender = message.SenderUserId == userId
+            };
+        }
+
+        public static UserBasicConversationDto AsDto(this UserConversationDocument conversation)
+        {
+            UserMessageDocument lastMessage =
+                conversation.Messages.OrderByDescending(x => x.CreatedAt).FirstOrDefault();
+
+            return new UserBasicConversationDto
+            {
+                ConversationId = conversation.Id,
+                LastMessage = lastMessage.Message,
+                LastMessageCreation = lastMessage.CreatedAt
             };
         }
 

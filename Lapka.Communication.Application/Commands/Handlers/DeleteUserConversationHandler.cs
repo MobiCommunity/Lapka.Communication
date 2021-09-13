@@ -22,21 +22,33 @@ namespace Lapka.Communication.Application.Commands.Handlers
 
         public async Task HandleAsync(DeleteUserConversation command)
         {
-            UserConversation conversation = await _repository.GetAsync(command.ConversationId);
-            if (conversation is null)
-            {
-                throw new ConversationNotFoundException(command.ConversationId);
-            }
-            
-            if (conversation.Members.All(x => x != command.UserId))
-            {
-                throw new UserDoesNotOwnConversationException(command.UserId, command.ConversationId);
-            }
+            UserConversation conversation = await GetUserConversationAsync(command);
+
+            CheckIfUserOwnConversation(command, conversation);
             
             conversation.Delete();
             
             await _repository.DeleteAsync(conversation);
             await _eventProcessor.ProcessAsync(conversation.Events);
+        }
+
+        private static void CheckIfUserOwnConversation(DeleteUserConversation command, UserConversation conversation)
+        {
+            if (conversation.Members.All(x => x != command.UserId))
+            {
+                throw new UserDoesNotOwnConversationException(command.UserId, command.ConversationId);
+            }
+        }
+
+        private async Task<UserConversation> GetUserConversationAsync(DeleteUserConversation command)
+        {
+            UserConversation conversation = await _repository.GetAsync(command.ConversationId);
+            if (conversation is null)
+            {
+                throw new ConversationNotFoundException(command.ConversationId);
+            }
+
+            return conversation;
         }
     }
 }

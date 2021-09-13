@@ -9,7 +9,7 @@ using Lapka.Communication.Core.ValueObjects;
 
 namespace Lapka.Communication.Application.Commands.Handlers
 {
-    public class CreateReportStrayPetHandler : ICommandHandler<CreateReportStrayPet>
+    public class CreateStrayPetMessageHandler : ICommandHandler<CreateStrayPetMessage>
     {
         private readonly IEventProcessor _eventProcessor;
         private readonly IGrpcIdentityService _grpcIdentityService;
@@ -17,7 +17,7 @@ namespace Lapka.Communication.Application.Commands.Handlers
         private readonly IStrayPetMessageRepository _repository;
 
 
-        public CreateReportStrayPetHandler(IEventProcessor eventProcessor, IGrpcIdentityService grpcIdentityService,
+        public CreateStrayPetMessageHandler(IEventProcessor eventProcessor, IGrpcIdentityService grpcIdentityService,
             IGrpcPhotoService photoService, IStrayPetMessageRepository repository)
         {
             _eventProcessor = eventProcessor;
@@ -26,7 +26,7 @@ namespace Lapka.Communication.Application.Commands.Handlers
             _repository = repository;
         }
 
-        public async Task HandleAsync(CreateReportStrayPet command)
+        public async Task HandleAsync(CreateStrayPetMessage command)
         {
             Guid shelterId = await GetClosestShelterIdAsync(command);
 
@@ -38,7 +38,7 @@ namespace Lapka.Communication.Application.Commands.Handlers
             await _eventProcessor.ProcessAsync(message.Events);
         }
 
-        private async Task<Guid> GetClosestShelterIdAsync(CreateReportStrayPet command)
+        private async Task<Guid> GetClosestShelterIdAsync(CreateStrayPetMessage command)
         {
             Guid shelterId;
 
@@ -60,7 +60,7 @@ namespace Lapka.Communication.Application.Commands.Handlers
             return shelterId;
         }
 
-        private async Task AddPhotosAsync(CreateReportStrayPet command)
+        private async Task AddPhotosAsync(CreateStrayPetMessage command)
         {
             try
             {

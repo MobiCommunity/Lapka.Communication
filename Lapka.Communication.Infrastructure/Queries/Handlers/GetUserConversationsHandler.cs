@@ -13,7 +13,8 @@ using MongoDB.Driver.Linq;
 
 namespace Lapka.Communication.Infrastructure.Queries.Handlers
 {
-    public class GetUserConversationsHandler : IQueryHandler<GetUserConversations, List<UserBasicConversationDto>>
+    public class
+        GetUserConversationsHandler : IQueryHandler<GetUserConversations, IEnumerable<UserBasicConversationDto>>
     {
         private readonly IMongoRepository<UserConversationDocument, Guid> _repository;
 
@@ -22,27 +23,12 @@ namespace Lapka.Communication.Infrastructure.Queries.Handlers
             _repository = repository;
         }
 
-        public async Task<List<UserBasicConversationDto>> HandleAsync(GetUserConversations query)
+        public async Task<IEnumerable<UserBasicConversationDto>> HandleAsync(GetUserConversations query)
         {
-            List<UserBasicConversationDto> userConversations = new List<UserBasicConversationDto>();
-
             IReadOnlyList<UserConversationDocument> conversations =
                 await _repository.FindAsync(x => x.Members.Any(x => x == query.UserId));
 
-            foreach (UserConversationDocument conversation in conversations)
-            {
-                UserMessageDocument lastMessage =
-                    conversation.Messages.OrderByDescending(x => x.CreatedAt).FirstOrDefault();
-                
-                userConversations.Add(new UserBasicConversationDto
-                {
-                    ConversationId = conversation.Id,
-                    LastMessage = lastMessage.Message,
-                    LastMessageCreation = lastMessage.CreatedAt
-                });
-            }
-
-            return userConversations;
+            return conversations.Select(x => x.AsDto());
         }
     }
 }

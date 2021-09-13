@@ -32,11 +32,7 @@ namespace Lapka.Communication.Application.Commands.Handlers
 
         public async Task HandleAsync(DeleteStrayPetMessage command)
         {
-            StrayPetMessage message = await _repository.GetAsync(command.Id);
-            if (message is null)
-            {
-                throw new MessageNotFoundException(command.Id);
-            }
+            StrayPetMessage message = await GetStrayPetMessageAsync(command);
 
             await ValidIfUserCanDeleteMessageAsync(command, message);
 
@@ -45,6 +41,17 @@ namespace Lapka.Communication.Application.Commands.Handlers
             
             await _repository.DeleteAsync(message);
             await _eventProcessor.ProcessAsync(message.Events);
+        }
+
+        private async Task<StrayPetMessage> GetStrayPetMessageAsync(DeleteStrayPetMessage command)
+        {
+            StrayPetMessage message = await _repository.GetAsync(command.Id);
+            if (message is null)
+            {
+                throw new MessageNotFoundException(command.Id);
+            }
+
+            return message;
         }
 
         private async Task ValidIfUserCanDeleteMessageAsync(DeleteStrayPetMessage command, StrayPetMessage message)

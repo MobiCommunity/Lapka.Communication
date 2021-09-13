@@ -6,7 +6,7 @@ using Lapka.Communication.Core.ValueObjects.Locations;
 
 namespace Lapka.Communication.Application.Commands
 {
-    public class CreateReportStrayPet : ICommand
+    public class CreateStrayPetMessage : ICommand
     {
         public Guid Id { get; }
         public Guid UserId { get; }
@@ -16,7 +16,7 @@ namespace Lapka.Communication.Application.Commands
         public string ReporterName { get; }
         public string ReporterPhoneNumber { get; }
 
-        public CreateReportStrayPet(Guid id, Guid userId, Location location, List<PhotoFile> photos,
+        public CreateStrayPetMessage(Guid id, Guid userId, Location location, List<PhotoFile> photos,
             string description, string reporterName, string reporterPhoneNumber)
         {
             Id = id;

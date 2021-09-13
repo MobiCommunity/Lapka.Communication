@@ -23,18 +23,25 @@ namespace Lapka.Communication.Application.Commands.Handlers
 
         public async Task HandleAsync(DeleteHelpShelterMessage command)
         {
-            HelpShelterMessage message = await _repository.GetAsync(command.Id);
-            if (message is null)
-            {
-                throw new MessageNotFoundException(command.Id);
-            }
- 
+            HelpShelterMessage message = await GetHelpShelterMessageAsync(command);
+
             await ValidIfUserCanDeleteAsync(command, message);
             
             message.Delete();
 
             await _repository.DeleteAsync(message);
             await _eventProcessor.ProcessAsync(message.Events);
+        }
+
+        private async Task<HelpShelterMessage> GetHelpShelterMessageAsync(DeleteHelpShelterMessage command)
+        {
+            HelpShelterMessage message = await _repository.GetAsync(command.Id);
+            if (message is null)
+            {
+                throw new MessageNotFoundException(command.Id);
+            }
+
+            return message;
         }
 
         private async Task ValidIfUserCanDeleteAsync(DeleteHelpShelterMessage command, HelpShelterMessage message)

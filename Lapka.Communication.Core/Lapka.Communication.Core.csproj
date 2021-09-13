@@ -6,4 +6,8 @@
         <NoWarn>$(NoWarn);1591</NoWarn>
         <ProjectGuid>{A3EB5086-9F99-432E-85E9-43510F550221}</ProjectGuid>
     </PropertyGroup>
+
+       <ItemGroup>
+         <Folder Include="Exceptions\Message" />
+       </ItemGroup>
 </Project>

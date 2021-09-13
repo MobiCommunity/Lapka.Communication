@@ -24,19 +24,31 @@ namespace Lapka.Communication.Infrastructure.Queries.Handlers
 
         public async Task<AdoptPetMessageDto> HandleAsync(GetAdoptPetMessage query)
         {
+            AdoptPetMessageDocument message = await GetAdoptPetMessageDocumentAsync(query);
+
+            await CheckIfUserIsAccessibleOfMessageAsync(query, message);
+
+            return message.AsDto();
+        }
+
+        private async Task CheckIfUserIsAccessibleOfMessageAsync(GetAdoptPetMessage query, AdoptPetMessageDocument message)
+        {
+            bool isUserOwner = await _identityService.IsUserOwnerOfShelterAsync(message.ShelterId, query.UserId);
+            if (!isUserOwner && message.UserId != query.UserId)
+            {
+                throw new UserDoesNotOwnMessageException(query.MessageId, query.UserId);
+            }
+        }
+
+        private async Task<AdoptPetMessageDocument> GetAdoptPetMessageDocumentAsync(GetAdoptPetMessage query)
+        {
             AdoptPetMessageDocument message = await _repository.GetAsync(x => x.Id == query.MessageId);
             if (message is null)
             {
                 throw new MessageNotFoundException(query.MessageId);
             }
 
-            bool isUserOwner = await _identityService.IsUserOwnerOfShelterAsync(message.ShelterId, query.UserId);
-            if (!isUserOwner && message.UserId != query.UserId)
-            {
-                throw new UserDoesNotOwnMessageException(query.MessageId, query.UserId);
-            }
-            
-            return message.AsDto();
+            return message;
         }
     }
 }

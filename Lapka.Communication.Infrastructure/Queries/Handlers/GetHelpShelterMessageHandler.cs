@@ -24,19 +24,32 @@ namespace Lapka.Communication.Infrastructure.Queries.Handlers
 
         public async Task<HelpShelterMessageDto> HandleAsync(GetHelpShelterMessage query)
         {
+            HelpShelterMessageDocument message = await GetHelpShelterMessageDocumentAsync(query);
+
+            await CheckIfUserIsAccessibleOfMessageAsync(query, message);
+
+            return message.AsDto();
+        }
+
+        private async Task CheckIfUserIsAccessibleOfMessageAsync(GetHelpShelterMessage query,
+            HelpShelterMessageDocument message)
+        {
+            bool isUserOwner = await _identityService.IsUserOwnerOfShelterAsync(message.ShelterId, query.UserId);
+            if (!isUserOwner && message.UserId != query.UserId)
+            {
+                throw new UserDoesNotOwnMessageException(query.MessageId, query.UserId);
+            }
+        }
+
+        private async Task<HelpShelterMessageDocument> GetHelpShelterMessageDocumentAsync(GetHelpShelterMessage query)
+        {
             HelpShelterMessageDocument message = await _repository.GetAsync(x => x.Id == query.MessageId);
             if (message is null)
             {
                 throw new MessageNotFoundException(query.MessageId);
             }
 
-            bool isUserOwner = await _identityService.IsUserOwnerOfShelterAsync(message.ShelterId, query.UserId);
-            if (!isUserOwner && message.UserId != query.UserId)
-            {
-                throw new UserDoesNotOwnMessageException(query.MessageId, query.UserId);
-            }
-            
-            return message.AsDto();
+            return message;
         }
     }
 }
