@@ -76,7 +76,7 @@ namespace Lapka.Communication.Api.Controllers
 
             Guid messageId = Guid.NewGuid();
 
-            await _commandDispatcher.SendAsync(new CreateReportStrayPet(messageId, userId,
+            await _commandDispatcher.SendAsync(new CreateStrayPetMessage(messageId, userId,
                 request.Location.AsValueObject(), request.Photos.CreatePhotoFiles(), request.Description,
                 request.ReporterName, request.ReporterPhoneNumber));
 

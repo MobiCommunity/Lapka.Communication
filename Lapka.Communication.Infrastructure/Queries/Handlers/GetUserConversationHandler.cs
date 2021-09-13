@@ -20,19 +20,32 @@ namespace Lapka.Communication.Infrastructure.Queries.Handlers
         }
         public async Task<UserDetailedConversationDto> HandleAsync(GetUserConversation query)
         {
+            UserConversationDocument conversation = await GetUserConversationDocumentAsync(query);
+
+            CheckIfUserIsAccessibleOfConversationAsync(query, conversation);
+
+            conversation.Messages = conversation.Messages.OrderByDescending(x => x.CreatedAt).ToList();
+            return conversation.AsDto(query.UserId);
+        }
+
+        private static void CheckIfUserIsAccessibleOfConversationAsync(GetUserConversation query,
+            UserConversationDocument conversation)
+        {
+            if (conversation.Members.All(x => x != query.UserId))
+            {
+                throw new UserDoesNotOwnConversationException(query.UserId, query.Id);
+            }
+        }
+
+        private async Task<UserConversationDocument> GetUserConversationDocumentAsync(GetUserConversation query)
+        {
             UserConversationDocument conversation = await _repository.GetAsync(x => x.Id == query.Id);
             if (conversation is null)
             {
                 throw new ConversationNotFoundException(query.Id);
             }
 
-            if (conversation.Members.All(x => x != query.UserId))
-            {
-                throw new UserDoesNotOwnConversationException(query.UserId, query.Id);
-            }
-
-            conversation.Messages = conversation.Messages.OrderByDescending(x => x.CreatedAt).ToList();
-            return conversation.AsDto(query.UserId);
+            return conversation;
         }
     }
 }

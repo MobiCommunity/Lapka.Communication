@@ -7,13 +7,13 @@ using Lapka.Communication.Core.Entities;
 
 namespace Lapka.Communication.Application.Commands.Handlers
 {
-    public class AdoptPetMessageHandler : ICommandHandler<CreateAdoptPetMessage>
+    public class CreateAdoptPetMessageHandler : ICommandHandler<CreateAdoptPetMessage>
     {
         private readonly IEventProcessor _eventProcessor;
         private readonly IAdoptPetMessageRepository _repository;
         private readonly IGrpcPetService _grpcPetService;
 
-        public AdoptPetMessageHandler(IEventProcessor eventProcessor, IAdoptPetMessageRepository repository,
+        public CreateAdoptPetMessageHandler(IEventProcessor eventProcessor, IAdoptPetMessageRepository repository,
             IGrpcPetService grpcPetService)
         {
             _eventProcessor = eventProcessor;

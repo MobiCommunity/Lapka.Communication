@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <ItemGroup>
+        <PackageReference Include="Grpc.AspNetCore" Version="2.39.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
+        <PackageReference Include="NSubstitute" Version="4.2.2" />
+        <PackageReference Include="Shouldly" Version="4.0.3" />
+        <PackageReference Include="xunit" Version="2.4.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Lapka.Communication.Api\Lapka.Communication.Api.csproj" />
+      <ProjectReference Include="..\Lapka.Communication.Application\Lapka.Communication.Application.csproj" />
+      <ProjectReference Include="..\Lapka.Communication.Core\Lapka.Communication.Core.csproj" />
+      <ProjectReference Include="..\Lapka.Communication.Infrastructure\Lapka.Communication.Infrastructure.csproj" />
+    </ItemGroup>
+    
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+    </PropertyGroup>
+
+</Project>

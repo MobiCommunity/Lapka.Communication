@@ -26,16 +26,21 @@ namespace Lapka.Communication.Infrastructure.Queries.Handlers
 
         public async Task<IEnumerable<AdoptPetMessageDto>> HandleAsync(GetAdoptPetMessages query)
         {
-            bool isUserOwner = await _identityService.IsUserOwnerOfShelterAsync(query.ShelterId, query.UserId);
-            if (!isUserOwner)
-            {
-                throw new UserNotOwnerOfShelterException(query.ShelterId, query.UserId);
-            }
+            await CheckIfUserIsOwnerOfShelterAsync(query);
 
             IReadOnlyList<AdoptPetMessageDocument> messages =
                 await _repository.FindAsync(x => x.ShelterId == query.ShelterId);
 
             return messages.Select(x => x.AsDto());
+        }
+
+        private async Task CheckIfUserIsOwnerOfShelterAsync(GetAdoptPetMessages query)
+        {
+            bool isUserOwner = await _identityService.IsUserOwnerOfShelterAsync(query.ShelterId, query.UserId);
+            if (!isUserOwner)
+            {
+                throw new UserNotOwnerOfShelterException(query.ShelterId, query.UserId);
+            }
         }
     }
 }

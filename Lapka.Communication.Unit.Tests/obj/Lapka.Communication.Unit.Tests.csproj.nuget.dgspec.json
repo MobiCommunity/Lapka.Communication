@@ -1,0 +1,474 @@
+{
+  "format": 1,
+  "restore": {
+    "G:\\RiderProjects\\Lapka.Communication\\Lapka.Communication.Unit.Tests\\Lapka.Communication.Unit.Tests.csproj": {}
+  },
+  "projects": {
+    "G:\\RiderProjects\\Lapka.Communication\\Lapka.Communication.Api\\Lapka.Communication.Api.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "G:\\RiderProjects\\Lapka.Communication\\Lapka.Communication.Api\\Lapka.Communication.Api.csproj",
+        "projectName": "Lapka.Communication.Api",
+        "projectPath": "G:\\RiderProjects\\Lapka.Communication\\Lapka.Communication.Api\\Lapka.Communication.Api.csproj",
+        "packagesPath": "C:\\Users\\wardl\\.nuget\\packages\\",
+        "outputPath": "G:\\RiderProjects\\Lapka.Communication\\Lapka.Communication.Api\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "D:\\VisualStudio\\Shared\\NuGetPackages",
+          "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\wardl\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {
+              "G:\\RiderProjects\\Lapka.Communication\\Lapka.Communication.Application\\Lapka.Communication.Application.csproj": {
+                "projectPath": "G:\\RiderProjects\\Lapka.Communication\\Lapka.Communication.Application\\Lapka.Communication.Application.csproj"
+              },
+              "G:\\RiderProjects\\Lapka.Communication\\Lapka.Communication.Infrastructure\\Lapka.Communication.Infrastructure.csproj": {
+                "projectPath": "G:\\RiderProjects\\Lapka.Communication\\Lapka.Communication.Infrastructure\\Lapka.Communication.Infrastructure.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "dependencies": {
+            "Convey.CQRS.Commands": {
+              "target": "Package",
+              "version": "[0.4.360, )"
+            },
+            "Convey.CQRS.Queries": {
+              "target": "Package",
+              "version": "[0.4.360, )"
+            },
+            "Convey.Logging": {
+              "target": "Package",
+              "version": "[0.4.360, )"
+            },
+            "Convey.Logging.CQRS": {
+              "target": "Package",
+              "version": "[0.4.360, )"
+            },
+            "Convey.WebApi.CQRS": {
+              "target": "Package",
+              "version": "[0.4.360, )"
+            },
+            "Microsoft.AspNetCore.Mvc.NewtonsoftJson": {
+              "target": "Package",
+              "version": "[3.1.8, )"
+            },
+            "Microsoft.OpenApi": {
+              "target": "Package",
+              "version": "[1.2.3, )"
+            },
+            "Swashbuckle.AspNetCore.Newtonsoft": {
+              "target": "Package",
+              "version": "[5.5.1, )"
+            },
+            "Swashbuckle.AspNetCore.SwaggerUI": {
+              "target": "Package",
+              "version": "[5.6.3, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.412\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "G:\\RiderProjects\\Lapka.Communication\\Lapka.Communication.Application\\Lapka.Communication.Application.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "G:\\RiderProjects\\Lapka.Communication\\Lapka.Communication.Application\\Lapka.Communication.Application.csproj",
+        "projectName": "Lapka.Communication.Application",
+        "projectPath": "G:\\RiderProjects\\Lapka.Communication\\Lapka.Communication.Application\\Lapka.Communication.Application.csproj",
+        "packagesPath": "C:\\Users\\wardl\\.nuget\\packages\\",
+        "outputPath": "G:\\RiderProjects\\Lapka.Communication\\Lapka.Communication.Application\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "D:\\VisualStudio\\Shared\\NuGetPackages",
+          "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\wardl\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {
+              "G:\\RiderProjects\\Lapka.Communication\\Lapka.Communication.Core\\Lapka.Communication.Core.csproj": {
+                "projectPath": "G:\\RiderProjects\\Lapka.Communication\\Lapka.Communication.Core\\Lapka.Communication.Core.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "dependencies": {
+            "Convey": {
+              "target": "Package",
+              "version": "[0.4.360, )"
+            },
+            "Convey.CQRS.Commands": {
+              "target": "Package",
+              "version": "[0.4.360, )"
+            },
+            "Convey.CQRS.Events": {
+              "target": "Package",
+              "version": "[0.4.360, )"
+            },
+            "Convey.CQRS.Queries": {
+              "target": "Package",
+              "version": "[0.4.360, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.412\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "G:\\RiderProjects\\Lapka.Communication\\Lapka.Communication.Core\\Lapka.Communication.Core.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "G:\\RiderProjects\\Lapka.Communication\\Lapka.Communication.Core\\Lapka.Communication.Core.csproj",
+        "projectName": "Lapka.Communication.Core",
+        "projectPath": "G:\\RiderProjects\\Lapka.Communication\\Lapka.Communication.Core\\Lapka.Communication.Core.csproj",
+        "packagesPath": "C:\\Users\\wardl\\.nuget\\packages\\",
+        "outputPath": "G:\\RiderProjects\\Lapka.Communication\\Lapka.Communication.Core\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "D:\\VisualStudio\\Shared\\NuGetPackages",
+          "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\wardl\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.412\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "G:\\RiderProjects\\Lapka.Communication\\Lapka.Communication.Infrastructure\\Lapka.Communication.Infrastructure.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "G:\\RiderProjects\\Lapka.Communication\\Lapka.Communication.Infrastructure\\Lapka.Communication.Infrastructure.csproj",
+        "projectName": "Lapka.Communication.Infrastructure",
+        "projectPath": "G:\\RiderProjects\\Lapka.Communication\\Lapka.Communication.Infrastructure\\Lapka.Communication.Infrastructure.csproj",
+        "packagesPath": "C:\\Users\\wardl\\.nuget\\packages\\",
+        "outputPath": "G:\\RiderProjects\\Lapka.Communication\\Lapka.Communication.Infrastructure\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "D:\\VisualStudio\\Shared\\NuGetPackages",
+          "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\wardl\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {
+              "G:\\RiderProjects\\Lapka.Communication\\Lapka.Communication.Application\\Lapka.Communication.Application.csproj": {
+                "projectPath": "G:\\RiderProjects\\Lapka.Communication\\Lapka.Communication.Application\\Lapka.Communication.Application.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "dependencies": {
+            "Convey": {
+              "target": "Package",
+              "version": "[0.4.360, )"
+            },
+            "Convey.Auth": {
+              "target": "Package",
+              "version": "[0.4.360, )"
+            },
+            "Convey.CQRS.Queries": {
+              "target": "Package",
+              "version": "[0.4.360, )"
+            },
+            "Convey.Discovery.Consul": {
+              "target": "Package",
+              "version": "[0.4.360, )"
+            },
+            "Convey.HTTP": {
+              "target": "Package",
+              "version": "[0.4.360, )"
+            },
+            "Convey.LoadBalancing.Fabio": {
+              "target": "Package",
+              "version": "[0.4.360, )"
+            },
+            "Convey.Logging": {
+              "target": "Package",
+              "version": "[0.4.360, )"
+            },
+            "Convey.MessageBrokers.CQRS": {
+              "target": "Package",
+              "version": "[0.4.360, )"
+            },
+            "Convey.MessageBrokers.Outbox": {
+              "target": "Package",
+              "version": "[0.4.360, )"
+            },
+            "Convey.MessageBrokers.RabbitMQ": {
+              "target": "Package",
+              "version": "[0.4.360, )"
+            },
+            "Convey.Metrics.AppMetrics": {
+              "target": "Package",
+              "version": "[0.4.360, )"
+            },
+            "Convey.Persistence.MongoDB": {
+              "target": "Package",
+              "version": "[0.4.360, )"
+            },
+            "Convey.WebApi.CQRS": {
+              "target": "Package",
+              "version": "[0.4.360, )"
+            },
+            "Grpc.AspNetCore": {
+              "target": "Package",
+              "version": "[2.39.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.412\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "G:\\RiderProjects\\Lapka.Communication\\Lapka.Communication.Unit.Tests\\Lapka.Communication.Unit.Tests.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "G:\\RiderProjects\\Lapka.Communication\\Lapka.Communication.Unit.Tests\\Lapka.Communication.Unit.Tests.csproj",
+        "projectName": "Lapka.Communication.Unit.Tests",
+        "projectPath": "G:\\RiderProjects\\Lapka.Communication\\Lapka.Communication.Unit.Tests\\Lapka.Communication.Unit.Tests.csproj",
+        "packagesPath": "C:\\Users\\wardl\\.nuget\\packages\\",
+        "outputPath": "G:\\RiderProjects\\Lapka.Communication\\Lapka.Communication.Unit.Tests\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "D:\\VisualStudio\\Shared\\NuGetPackages",
+          "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\wardl\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {
+              "G:\\RiderProjects\\Lapka.Communication\\Lapka.Communication.Api\\Lapka.Communication.Api.csproj": {
+                "projectPath": "G:\\RiderProjects\\Lapka.Communication\\Lapka.Communication.Api\\Lapka.Communication.Api.csproj"
+              },
+              "G:\\RiderProjects\\Lapka.Communication\\Lapka.Communication.Application\\Lapka.Communication.Application.csproj": {
+                "projectPath": "G:\\RiderProjects\\Lapka.Communication\\Lapka.Communication.Application\\Lapka.Communication.Application.csproj"
+              },
+              "G:\\RiderProjects\\Lapka.Communication\\Lapka.Communication.Core\\Lapka.Communication.Core.csproj": {
+                "projectPath": "G:\\RiderProjects\\Lapka.Communication\\Lapka.Communication.Core\\Lapka.Communication.Core.csproj"
+              },
+              "G:\\RiderProjects\\Lapka.Communication\\Lapka.Communication.Infrastructure\\Lapka.Communication.Infrastructure.csproj": {
+                "projectPath": "G:\\RiderProjects\\Lapka.Communication\\Lapka.Communication.Infrastructure\\Lapka.Communication.Infrastructure.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "dependencies": {
+            "Grpc.AspNetCore": {
+              "target": "Package",
+              "version": "[2.39.0, )"
+            },
+            "Microsoft.NET.Test.Sdk": {
+              "target": "Package",
+              "version": "[16.10.0, )"
+            },
+            "NSubstitute": {
+              "target": "Package",
+              "version": "[4.2.2, )"
+            },
+            "Shouldly": {
+              "target": "Package",
+              "version": "[4.0.3, )"
+            },
+            "xunit": {
+              "target": "Package",
+              "version": "[2.4.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.412\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

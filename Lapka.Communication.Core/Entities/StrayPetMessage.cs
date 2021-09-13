@@ -1,45 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using Lapka.Communication.Core.Events.Concrete;
+using Lapka.Communication.Core.Exceptions;
+using Lapka.Communication.Core.ValueObjects;
 
 namespace Lapka.Communication.Core.Entities
 {
-    public class StrayPetMessage : AggregateRoot
+    public class StrayPetMessage : AggregateShelterMessage
     {
-        public Guid UserId { get; }
-        public Guid ShelterId { get; }
         public List<Guid> PhotoIds { get; }
-        public string Description { get; }
-        public string FullName { get; }
-        public string PhoneNumber { get; }
-        public DateTime CreatedAt { get; }
 
-
-        public StrayPetMessage(Guid id, Guid userId, Guid shelterId, List<Guid> photoIds, string description,
-            string fullName, string phoneNumber, DateTime createdAt)
+        public StrayPetMessage(Guid id, Guid userId, Guid shelterId, List<Guid> photoIds, MessageDescription description, FullName fullName,
+            PhoneNumber phoneNumber, DateTime createdAt) : base(id, userId, shelterId, description,
+            fullName, phoneNumber, createdAt)
         {
-            Id = new AggregateId(id);
-            UserId = userId;
-            ShelterId = shelterId;
             PhotoIds = photoIds;
-            Description = description;
-            FullName = fullName;
-            PhoneNumber = phoneNumber;
-            CreatedAt = createdAt;
         }
 
         public static StrayPetMessage Create(Guid id, Guid userId, Guid shelterId, List<Guid> photoIds,
             string description, string fullName, string phoneNumber)
         {
-            StrayPetMessage message = new StrayPetMessage(id, userId, shelterId, photoIds, description, fullName,
-                phoneNumber, DateTime.Now);
+            StrayPetMessage message = new StrayPetMessage(id, userId, shelterId, photoIds,
+                new MessageDescription(description), new FullName(fullName), new PhoneNumber(phoneNumber),
+                DateTime.Now);
 
             message.AddEvent(new StrayPetMessageCreated(message));
             return message;
         }
 
-        public void Delete()
+        public override void Delete()
         {
             AddEvent(new StrayPetMessageDeleted(this));
         }

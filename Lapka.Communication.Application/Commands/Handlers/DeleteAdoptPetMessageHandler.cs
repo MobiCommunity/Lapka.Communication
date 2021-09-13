@@ -6,14 +6,14 @@ using Lapka.Communication.Core.Entities;
 
 namespace Lapka.Communication.Application.Commands.Handlers
 {
-    public class DeleteAdoptPetHandler : ICommandHandler<DeleteAdoptPetMessage>
+    public class DeleteAdoptPetMessageHandler : ICommandHandler<DeleteAdoptPetMessage>
     {
         private readonly IEventProcessor _eventProcessor;
         private readonly IGrpcIdentityService _grpcIdentityService;
         private readonly IAdoptPetMessageRepository _repository;
 
 
-        public DeleteAdoptPetHandler(IEventProcessor eventProcessor, IGrpcIdentityService grpcIdentityService,
+        public DeleteAdoptPetMessageHandler(IEventProcessor eventProcessor, IGrpcIdentityService grpcIdentityService,
             IAdoptPetMessageRepository repository)
         {
             _eventProcessor = eventProcessor;
@@ -23,18 +23,25 @@ namespace Lapka.Communication.Application.Commands.Handlers
 
         public async Task HandleAsync(DeleteAdoptPetMessage command)
         {
-            AdoptPetMessage message = await _repository.GetAsync(command.Id);
-            if (message is null)
-            {
-                throw new MessageNotFoundException(command.Id);
-            }
- 
+            AdoptPetMessage message = await GetAdoptMessageAsync(command);
+
             await ValidIfUserCanDeleteAsync(command, message);
             
             message.Delete();
 
             await _repository.DeleteAsync(message);
             await _eventProcessor.ProcessAsync(message.Events);
+        }
+
+        private async Task<AdoptPetMessage> GetAdoptMessageAsync(DeleteAdoptPetMessage command)
+        {
+            AdoptPetMessage message = await _repository.GetAsync(command.Id);
+            if (message is null)
+            {
+                throw new MessageNotFoundException(command.Id);
+            }
+
+            return message;
         }
 
         private async Task ValidIfUserCanDeleteAsync(DeleteAdoptPetMessage command, AdoptPetMessage message)

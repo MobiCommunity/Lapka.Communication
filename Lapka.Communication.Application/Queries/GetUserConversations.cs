@@ -5,7 +5,7 @@ using Lapka.Communication.Application.Dto;
 
 namespace Lapka.Communication.Application.Queries
 {
-    public class GetUserConversations : IQuery<List<UserBasicConversationDto>>
+    public class GetUserConversations : IQuery<IEnumerable<UserBasicConversationDto>>
     {
         public Guid UserId { get; set; }
     }
