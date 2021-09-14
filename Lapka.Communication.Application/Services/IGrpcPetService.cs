@@ -5,6 +5,6 @@ namespace Lapka.Communication.Application.Services
 {
     public interface IGrpcPetService
     {
-        Task<Guid> GetShelterId(Guid petId);
+        Task<Guid> GetShelterIdAsync(Guid petId);
     }
 }

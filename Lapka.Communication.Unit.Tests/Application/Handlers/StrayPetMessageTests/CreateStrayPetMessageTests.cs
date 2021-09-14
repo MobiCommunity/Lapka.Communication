@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,17 +23,19 @@ namespace Lapka.Communication.Unit.Tests.Application.Handlers.StrayPetMessageTes
         private readonly IEventProcessor _eventProcessor;
         private readonly IGrpcIdentityService _grpcIdentityService;
         private readonly CreateStrayPetMessageHandler _handler;
-        private readonly IStrayPetMessageRepository _repository;
+        private readonly IShelterMessageRepository _repository;
         private readonly IGrpcPhotoService _grpcPhotoService;
+        private readonly IShelterMessageFactory _shelterMessageFactory;
 
         public CreateStrayPetMessageTests()
         {
             _grpcPhotoService = Substitute.For<IGrpcPhotoService>();
             _grpcIdentityService = Substitute.For<IGrpcIdentityService>();
             _eventProcessor = Substitute.For<IEventProcessor>();
-            _repository = Substitute.For<IStrayPetMessageRepository>();
+            _repository = Substitute.For<IShelterMessageRepository>();
+            _shelterMessageFactory = Substitute.For<IShelterMessageFactory>();
             _handler = new CreateStrayPetMessageHandler(_eventProcessor, _grpcIdentityService, _grpcPhotoService,
-                _repository);
+                _repository, _shelterMessageFactory);
         }
 
         private Task Act(CreateStrayPetMessage command)
@@ -50,25 +52,25 @@ namespace Lapka.Communication.Unit.Tests.Application.Handlers.StrayPetMessageTes
                 Extensions.ArrangePhotoFile(),
                 Extensions.ArrangePhotoFile()
             };
-            StrayPetMessage message = Extensions.ArrangeStrayPetMessage(photoIds: photos.IdsAsGuidList());
+            ShelterMessage message = Extensions.ArrangeShelterMessage();
 
             CreateStrayPetMessage command = new CreateStrayPetMessage(message.Id.Value, message.UserId,
                 location, photos, message.Description.Value, message.FullName.Value, message.PhoneNumber.Value);
 
             _grpcIdentityService.ClosestShelterAsync(command.Location.Longitude.Value, command.Location.Latitude.Value)
                 .Returns(message.ShelterId);
+            _shelterMessageFactory.CreateStrayPetMessage(command, message.ShelterId).Returns(message);
 
             await Act(command);
 
             await _repository.Received()
-                .AddAsync(Arg.Is<StrayPetMessage>(m =>
+                .AddAsync(Arg.Is<ShelterMessage>(m =>
                     m.Id.Value == message.Id.Value && m.ShelterId == message.ShelterId && m.UserId == message.UserId &&
-                    m.ShelterId == message.ShelterId && m.PhotoIds.SequenceEqual(message.PhotoIds) &&
-                    m.Description.Value == message.Description.Value && m.FullName.Value == message.FullName.Value &&
+                    m.ShelterId == message.ShelterId && m.FullName.Value == message.FullName.Value &&
                     m.PhoneNumber.Value == message.PhoneNumber.Value));
 
             await _eventProcessor.Received().ProcessAsync(Arg.Is<IEnumerable<IDomainEvent>>(e
-                => e.FirstOrDefault().GetType() == typeof(StrayPetMessageCreated)));
+                => e.FirstOrDefault().GetType() == typeof(ShelterMessageCreated)));
         }
 
         [Fact]
@@ -80,7 +82,7 @@ namespace Lapka.Communication.Unit.Tests.Application.Handlers.StrayPetMessageTes
                 Extensions.ArrangePhotoFile(),
                 Extensions.ArrangePhotoFile()
             };
-            StrayPetMessage message = Extensions.ArrangeStrayPetMessage(photoIds: photos.IdsAsGuidList());
+            ShelterMessage message = Extensions.ArrangeShelterMessage();
 
             CreateStrayPetMessage command = new CreateStrayPetMessage(message.Id.Value, message.UserId,
                 location, photos, message.Description.Value, message.FullName.Value, message.PhoneNumber.Value);

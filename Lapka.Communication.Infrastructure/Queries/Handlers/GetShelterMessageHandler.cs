@@ -10,28 +10,29 @@ using Lapka.Communication.Infrastructure.Documents;
 
 namespace Lapka.Communication.Infrastructure.Queries.Handlers
 {
-    public class GetAdoptPetMessageHandler : IQueryHandler<GetAdoptPetMessage, AdoptPetMessageDto>
+    public class GetShelterMessageHandler : IQueryHandler<GetShelterMessage, ShelterMessageDto>
     {
-        private readonly IMongoRepository<AdoptPetMessageDocument, Guid> _repository;
+        private readonly IMongoRepository<ShelterMessageDocument, Guid> _repository;
         private readonly IGrpcIdentityService _identityService;
 
-        public GetAdoptPetMessageHandler(IMongoRepository<AdoptPetMessageDocument, Guid> repository,
+        public GetShelterMessageHandler(IMongoRepository<ShelterMessageDocument, Guid> repository,
             IGrpcIdentityService identityService)
         {
             _repository = repository;
             _identityService = identityService;
         }
 
-        public async Task<AdoptPetMessageDto> HandleAsync(GetAdoptPetMessage query)
+        public async Task<ShelterMessageDto> HandleAsync(GetShelterMessage query)
         {
-            AdoptPetMessageDocument message = await GetAdoptPetMessageDocumentAsync(query);
+            ShelterMessageDocument message = await GetHelpShelterMessageDocumentAsync(query);
 
             await CheckIfUserIsAccessibleOfMessageAsync(query, message);
 
             return message.AsDto();
         }
 
-        private async Task CheckIfUserIsAccessibleOfMessageAsync(GetAdoptPetMessage query, AdoptPetMessageDocument message)
+        private async Task CheckIfUserIsAccessibleOfMessageAsync(GetShelterMessage query,
+            ShelterMessageDocument message)
         {
             bool isUserOwner = await _identityService.IsUserOwnerOfShelterAsync(message.ShelterId, query.UserId);
             if (!isUserOwner && message.UserId != query.UserId)
@@ -40,9 +41,9 @@ namespace Lapka.Communication.Infrastructure.Queries.Handlers
             }
         }
 
-        private async Task<AdoptPetMessageDocument> GetAdoptPetMessageDocumentAsync(GetAdoptPetMessage query)
+        private async Task<ShelterMessageDocument> GetHelpShelterMessageDocumentAsync(GetShelterMessage query)
         {
-            AdoptPetMessageDocument message = await _repository.GetAsync(x => x.Id == query.MessageId);
+            ShelterMessageDocument message = await _repository.GetAsync(x => x.Id == query.MessageId);
             if (message is null)
             {
                 throw new MessageNotFoundException(query.MessageId);

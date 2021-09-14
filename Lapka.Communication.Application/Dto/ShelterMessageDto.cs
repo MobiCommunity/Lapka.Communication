@@ -1,14 +1,13 @@
 ﻿using System;
-using Convey.Types;
+using Lapka.Communication.Core.ValueObjects;
 
-namespace Lapka.Communication.Infrastructure.Documents
+namespace Lapka.Communication.Application.Dto
 {
-    public class AdoptPetMessageDocument : IIdentifiable<Guid>
+    public class ShelterMessageDto
     {
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
         public Guid ShelterId { get; set; }
-        public Guid PetId { get; set; }
         public string Description { get; set; }
         public string FullName { get; set; }
         public string PhoneNumber { get; set; }

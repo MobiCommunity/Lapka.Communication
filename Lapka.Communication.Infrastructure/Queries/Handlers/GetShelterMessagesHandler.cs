@@ -12,29 +12,29 @@ using Lapka.Communication.Infrastructure.Documents;
 
 namespace Lapka.Communication.Infrastructure.Queries.Handlers
 {
-    public class GetStrayPetMessagesHandler : IQueryHandler<GetStrayPetMessages, IEnumerable<StrayPetMessageDto>>
+    public class GetShelterMessagesHandler : IQueryHandler<GetShelterMessages, IEnumerable<ShelterMessageDto>>
     {
-        private readonly IMongoRepository<StrayPetMessageDocument, Guid> _repository;
+        private readonly IMongoRepository<ShelterMessageDocument, Guid> _repository;
         private readonly IGrpcIdentityService _identityService;
 
-        public GetStrayPetMessagesHandler(IMongoRepository<StrayPetMessageDocument, Guid> repository,
+        public GetShelterMessagesHandler(IMongoRepository<ShelterMessageDocument, Guid> repository,
             IGrpcIdentityService identityService)
         {
             _repository = repository;
             _identityService = identityService;
         }
 
-        public async Task<IEnumerable<StrayPetMessageDto>> HandleAsync(GetStrayPetMessages query)
+        public async Task<IEnumerable<ShelterMessageDto>> HandleAsync(GetShelterMessages query)
         {
             await CheckIfUserIsOwnerOfShelterAsync(query);
 
-            IReadOnlyList<StrayPetMessageDocument> messages =
+            IReadOnlyList<ShelterMessageDocument> messages =
                 await _repository.FindAsync(x => x.ShelterId == query.ShelterId);
 
             return messages.Select(x => x.AsDto());
         }
 
-        private async Task CheckIfUserIsOwnerOfShelterAsync(GetStrayPetMessages query)
+        private async Task CheckIfUserIsOwnerOfShelterAsync(GetShelterMessages query)
         {
             bool isUserOwner = await _identityService.IsUserOwnerOfShelterAsync(query.ShelterId, query.UserId);
             if (!isUserOwner)

@@ -14,24 +14,25 @@ namespace Lapka.Communication.Application.Commands.Handlers
         private readonly IEventProcessor _eventProcessor;
         private readonly IGrpcIdentityService _grpcIdentityService;
         private readonly IGrpcPhotoService _photoService;
-        private readonly IStrayPetMessageRepository _repository;
+        private readonly IShelterMessageRepository _repository;
+        private readonly IShelterMessageFactory _messageFactory;
 
 
         public CreateStrayPetMessageHandler(IEventProcessor eventProcessor, IGrpcIdentityService grpcIdentityService,
-            IGrpcPhotoService photoService, IStrayPetMessageRepository repository)
+            IGrpcPhotoService photoService, IShelterMessageRepository repository , IShelterMessageFactory messageFactory)
         {
             _eventProcessor = eventProcessor;
             _grpcIdentityService = grpcIdentityService;
             _photoService = photoService;
             _repository = repository;
+            _messageFactory = messageFactory;
         }
 
         public async Task HandleAsync(CreateStrayPetMessage command)
         {
             Guid shelterId = await GetClosestShelterIdAsync(command);
 
-            StrayPetMessage message = StrayPetMessage.Create(command.Id, command.UserId, shelterId,
-                command.Photos.IdsAsGuidList(), command.Description, command.ReporterName, command.ReporterPhoneNumber);
+            ShelterMessage message = _messageFactory.CreateStrayPetMessage(command, shelterId);
 
             await AddPhotosAsync(command);
             await _repository.AddAsync(message);

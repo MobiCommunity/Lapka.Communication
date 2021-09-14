@@ -14,7 +14,7 @@ namespace Lapka.Communication.Infrastructure.Services
             _client = client;
         }
         
-        public async Task<Guid> GetShelterId(Guid petId)
+        public async Task<Guid> GetShelterIdAsync(Guid petId)
         {
             GetPetsShelterReply response = await _client.GetPetsShelterAsync(new GetPetsShelterRequest
             {
