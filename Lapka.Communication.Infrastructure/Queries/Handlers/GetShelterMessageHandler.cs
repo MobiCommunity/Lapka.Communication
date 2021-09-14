@@ -10,19 +10,19 @@ using Lapka.Communication.Infrastructure.Documents;
 
 namespace Lapka.Communication.Infrastructure.Queries.Handlers
 {
-    public class GetHelpShelterMessageHandler : IQueryHandler<GetHelpShelterMessage, ShelterMessageDto>
+    public class GetShelterMessageHandler : IQueryHandler<GetShelterMessage, ShelterMessageDto>
     {
         private readonly IMongoRepository<ShelterMessageDocument, Guid> _repository;
         private readonly IGrpcIdentityService _identityService;
 
-        public GetHelpShelterMessageHandler(IMongoRepository<ShelterMessageDocument, Guid> repository,
+        public GetShelterMessageHandler(IMongoRepository<ShelterMessageDocument, Guid> repository,
             IGrpcIdentityService identityService)
         {
             _repository = repository;
             _identityService = identityService;
         }
 
-        public async Task<ShelterMessageDto> HandleAsync(GetHelpShelterMessage query)
+        public async Task<ShelterMessageDto> HandleAsync(GetShelterMessage query)
         {
             ShelterMessageDocument message = await GetHelpShelterMessageDocumentAsync(query);
 
@@ -31,7 +31,7 @@ namespace Lapka.Communication.Infrastructure.Queries.Handlers
             return message.AsDto();
         }
 
-        private async Task CheckIfUserIsAccessibleOfMessageAsync(GetHelpShelterMessage query,
+        private async Task CheckIfUserIsAccessibleOfMessageAsync(GetShelterMessage query,
             ShelterMessageDocument message)
         {
             bool isUserOwner = await _identityService.IsUserOwnerOfShelterAsync(message.ShelterId, query.UserId);
@@ -41,7 +41,7 @@ namespace Lapka.Communication.Infrastructure.Queries.Handlers
             }
         }
 
-        private async Task<ShelterMessageDocument> GetHelpShelterMessageDocumentAsync(GetHelpShelterMessage query)
+        private async Task<ShelterMessageDocument> GetHelpShelterMessageDocumentAsync(GetShelterMessage query)
         {
             ShelterMessageDocument message = await _repository.GetAsync(x => x.Id == query.MessageId);
             if (message is null)

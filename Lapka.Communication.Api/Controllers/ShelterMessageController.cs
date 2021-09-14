@@ -36,7 +36,7 @@ namespace Lapka.Communication.Api.Controllers
                 return Unauthorized();
             }
 
-            return Ok(await _queryDispatcher.QueryAsync(new GetHelpShelterMessage
+            return Ok(await _queryDispatcher.QueryAsync(new GetShelterMessage
             {
                 MessageId = id,
                 UserId = userId
