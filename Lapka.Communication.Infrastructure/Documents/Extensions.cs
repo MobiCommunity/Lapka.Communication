@@ -9,21 +9,20 @@ namespace Lapka.Communication.Infrastructure.Documents
 {
     public static class Extensions
     {
-        public static AdoptPetMessage AsBusiness(this AdoptPetMessageDocument message)
+        public static ShelterMessage AsBusiness(this ShelterMessageDocument message)
         {
-            return new AdoptPetMessage(message.Id, message.UserId, message.ShelterId, message.PetId,
+            return new ShelterMessage(message.Id, message.UserId, message.ShelterId, message.Title,
                 new MessageDescription(message.Description), new FullName(message.FullName),
                 new PhoneNumber(message.PhoneNumber), message.CreatedAt);
         }
 
-        public static AdoptPetMessageDocument AsDocument(this AdoptPetMessage message)
+        public static ShelterMessageDocument AsDocument(this ShelterMessage message)
         {
-            return new AdoptPetMessageDocument
+            return new ShelterMessageDocument
             {
                 Id = message.Id.Value,
                 UserId = message.UserId,
                 ShelterId = message.ShelterId,
-                PetId = message.PetId,
                 Description = message.Description.Value,
                 FullName = message.FullName.Value,
                 PhoneNumber = message.PhoneNumber.Value,
@@ -31,88 +30,13 @@ namespace Lapka.Communication.Infrastructure.Documents
             };
         }
 
-        public static AdoptPetMessageDto AsDto(this AdoptPetMessageDocument message)
+        public static ShelterMessageDto AsDto(this ShelterMessageDocument message)
         {
-            return new AdoptPetMessageDto
+            return new ShelterMessageDto
             {
                 Id = message.Id,
                 UserId = message.UserId,
                 ShelterId = message.ShelterId,
-                PetId = message.PetId,
-                Description = message.Description,
-                FullName = message.FullName,
-                PhoneNumber = message.PhoneNumber,
-                CreatedAt = message.CreatedAt
-            };
-        }
-
-        public static StrayPetMessage AsBusiness(this StrayPetMessageDocument message)
-        {
-            return new StrayPetMessage(message.Id, message.UserId, message.ShelterId, message.PhotoIds,
-                new MessageDescription(message.Description), new FullName(message.FullName),
-                new PhoneNumber(message.PhoneNumber), message.CreatedAt);
-        }
-
-        public static StrayPetMessageDocument AsDocument(this StrayPetMessage message)
-        {
-            return new StrayPetMessageDocument
-            {
-                Id = message.Id.Value,
-                UserId = message.UserId,
-                ShelterId = message.ShelterId,
-                PhotoIds = message.PhotoIds,
-                Description = message.Description.Value,
-                FullName = message.FullName.Value,
-                PhoneNumber = message.PhoneNumber.Value,
-                CreatedAt = message.CreatedAt
-            };
-        }
-
-        public static StrayPetMessageDto AsDto(this StrayPetMessageDocument message)
-        {
-            return new StrayPetMessageDto
-            {
-                Id = message.Id,
-                UserId = message.UserId,
-                ShelterId = message.ShelterId,
-                PhotoIds = message.PhotoIds,
-                Description = message.Description,
-                FullName = message.FullName,
-                PhoneNumber = message.PhoneNumber,
-                CreatedAt = message.CreatedAt
-            };
-        }
-
-        public static HelpShelterMessage AsBusiness(this HelpShelterMessageDocument message)
-        {
-            return new HelpShelterMessage(message.Id, message.UserId, message.ShelterId, message.HelpType,
-                new MessageDescription(message.Description), new FullName(message.FullName),
-                new PhoneNumber(message.PhoneNumber), message.CreatedAt);
-        }
-
-        public static HelpShelterMessageDocument AsDocument(this HelpShelterMessage message)
-        {
-            return new HelpShelterMessageDocument
-            {
-                Id = message.Id.Value,
-                UserId = message.UserId,
-                ShelterId = message.ShelterId,
-                HelpType = message.HelpType,
-                Description = message.Description.Value,
-                FullName = message.FullName.Value,
-                PhoneNumber = message.PhoneNumber.Value,
-                CreatedAt = message.CreatedAt
-            };
-        }
-
-        public static HelpShelterMessageDto AsDto(this HelpShelterMessageDocument message)
-        {
-            return new HelpShelterMessageDto
-            {
-                Id = message.Id,
-                UserId = message.UserId,
-                ShelterId = message.ShelterId,
-                HelpType = message.HelpType,
                 Description = message.Description,
                 FullName = message.FullName,
                 PhoneNumber = message.PhoneNumber,

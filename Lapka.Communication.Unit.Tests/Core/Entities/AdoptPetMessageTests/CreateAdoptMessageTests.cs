@@ -13,47 +13,36 @@ namespace Lapka.Communication.Unit.Tests.Core.Entities.AdoptPetMessageTests
 {
     public class CreateShelterTests
     {
-        private AdoptPetMessage Act(AggregateId id, Guid userId, Guid shelterId, Guid petId, string description,
-            string fullName, string phoneNumber) => AdoptPetMessage.Create(id.Value, userId, shelterId, petId,
-            description, fullName, phoneNumber);
+        private ShelterMessage Act(AggregateId id, Guid userId, Guid shelterId, string title, string description,
+            string fullName, string phoneNumber) => ShelterMessage.Create(id.Value, userId, shelterId, title,
+            description, fullName, phoneNumber, DateTime.Now);
 
         [Fact]
         public void given_valid_adopt_message_should_be_created()
         {
-            AdoptPetMessage arrangeShelter = Extensions.ArrangeAdoptPetMessage();
+            ShelterMessage arrangeShelter = Extensions.ArrangeShelterMessage();
 
-            AdoptPetMessage shelter = Act(arrangeShelter.Id, arrangeShelter.UserId, arrangeShelter.ShelterId,
-                arrangeShelter.PetId, arrangeShelter.Description.Value, arrangeShelter.FullName.Value,
+            ShelterMessage shelter = Act(arrangeShelter.Id, arrangeShelter.UserId, arrangeShelter.ShelterId,
+                arrangeShelter.Title, arrangeShelter.Description.Value, arrangeShelter.FullName.Value,
                 arrangeShelter.PhoneNumber.Value);
 
             shelter.ShouldNotBeNull();
             shelter.Id.ShouldBe(arrangeShelter.Id);
             shelter.UserId.ShouldBe(arrangeShelter.UserId);
             shelter.ShelterId.ShouldBe(arrangeShelter.ShelterId);
-            shelter.PetId.ShouldBe(arrangeShelter.PetId);
-            shelter.Description.Value.ShouldBe(arrangeShelter.Description.Value);
+            shelter.Title.ShouldBe(arrangeShelter.Title);
             shelter.FullName.Value.ShouldBe(arrangeShelter.FullName.Value);
             shelter.PhoneNumber.Value.ShouldBe(arrangeShelter.PhoneNumber.Value);
             shelter.Events.Count().ShouldBe(1);
             IDomainEvent @event = shelter.Events.Single();
-            @event.ShouldBeOfType<AdoptPetMessageCreated>();
+            @event.ShouldBeOfType<ShelterMessageCreated>();
         }
-        
-        [Fact]
-        public void given_invalid_adopt_petId_should_throw_an_exception()
-        {
-            Exception exception = Record.Exception(() =>
-                Extensions.ArrangeAdoptPetMessage(petId: Guid.Empty));
 
-            exception.ShouldNotBeNull();
-            exception.ShouldBeOfType<InvalidPetIdValueException>();
-        }
-        
         [Fact]
         public void given_invalid_adopt_userId_should_throw_an_exception()
         {
             Exception exception = Record.Exception(() =>
-                Extensions.ArrangeAdoptPetMessage(userId: Guid.Empty));
+                Extensions.ArrangeShelterMessage(userId: Guid.Empty));
 
             exception.ShouldNotBeNull();
             exception.ShouldBeOfType<InvalidUserIdValueException>();
@@ -63,7 +52,7 @@ namespace Lapka.Communication.Unit.Tests.Core.Entities.AdoptPetMessageTests
         public void given_invalid_adopt_shelterId_should_throw_an_exception()
         {
             Exception exception = Record.Exception(() =>
-                Extensions.ArrangeAdoptPetMessage(shelterId: Guid.Empty));
+                Extensions.ArrangeShelterMessage(shelterId: Guid.Empty));
 
             exception.ShouldNotBeNull();
             exception.ShouldBeOfType<InvalidShelterIdValueException>();

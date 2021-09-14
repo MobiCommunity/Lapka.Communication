@@ -13,22 +13,22 @@ namespace Lapka.Communication.Api.Controllers
 {
     [ApiController]
     [Route("api/message")]
-    public class StrayPetMessageController : ControllerBase
+    public class ShelterMessageController : ControllerBase
     {
         private readonly ICommandDispatcher _commandDispatcher;
         private readonly IQueryDispatcher _queryDispatcher;
 
-        public StrayPetMessageController(ICommandDispatcher commandDispatcher, IQueryDispatcher queryDispatcher)
+        public ShelterMessageController(ICommandDispatcher commandDispatcher, IQueryDispatcher queryDispatcher)
         {
             _commandDispatcher = commandDispatcher;
             _queryDispatcher = queryDispatcher;
         }
 
         /// <summary>
-        /// Gets stray pet message 
+        /// Gets help message 
         /// </summary>
-        [HttpGet("{id:guid}/stray")]
-        public async Task<IActionResult> GetStrayPetMessage(Guid id)
+        [HttpGet("{id:guid}")]
+        public async Task<IActionResult> GetMessage(Guid id)
         {
             Guid userId = await HttpContext.AuthenticateUsingJwtGetUserIdAsync();
             if (userId == Guid.Empty)
@@ -36,18 +36,18 @@ namespace Lapka.Communication.Api.Controllers
                 return Unauthorized();
             }
 
-            return Ok(await _queryDispatcher.QueryAsync(new GetStrayPetMessage
+            return Ok(await _queryDispatcher.QueryAsync(new GetHelpShelterMessage
             {
                 MessageId = id,
                 UserId = userId
             }));
         }
-        
+
         /// <summary>
-        /// Get all stray pet shelters messages
+        /// Get all help shelter messages
         /// </summary>
-        [HttpGet("shelter/{id:guid}/stray")]
-        public async Task<IActionResult> GetShelterStrayPetMessages(Guid id)
+        [HttpGet("shelter/{id:guid}")]
+        public async Task<IActionResult> GetShelterMessages(Guid id)
         {
             Guid userId = await HttpContext.AuthenticateUsingJwtGetUserIdAsync();
             if (userId == Guid.Empty)
@@ -55,7 +55,7 @@ namespace Lapka.Communication.Api.Controllers
                 return Unauthorized();
             }
 
-            return Ok(await _queryDispatcher.QueryAsync(new GetStrayPetMessages
+            return Ok(await _queryDispatcher.QueryAsync(new GetShelterMessages
             {
                 ShelterId = id,
                 UserId = userId
@@ -63,10 +63,30 @@ namespace Lapka.Communication.Api.Controllers
         }
 
         /// <summary>
+        /// Creates message for help shelter
+        /// </summary>
+        [HttpPost("help")]
+        public async Task<IActionResult> CreateHelpShelterMessage([FromBody] CreateHelpShelterMessageRequest message)
+        {
+            Guid userId = await HttpContext.AuthenticateUsingJwtGetUserIdAsync();
+            if (userId == Guid.Empty)
+            {
+                return Unauthorized();
+            }
+
+            Guid id = Guid.NewGuid();
+
+            await _commandDispatcher.SendAsync(new CreateHelpShelterMessage(id, userId, message.ShelterId,
+                message.HelpType, message.Description, message.FullName, message.PhoneNumber));
+
+            return Created($"api/message/{id}", null);
+        }
+        
+        /// <summary>
         /// Creates a report stray pet message
         /// </summary>
         [HttpPost("stray")]
-        public async Task<IActionResult> ReportStrayPet([FromForm] ReportStrayPetRequest request)
+        public async Task<IActionResult> CreateStrayPetMessage([FromForm] ReportStrayPetRequest request)
         {
             Guid userId = await HttpContext.AuthenticateUsingJwtGetUserIdAsync();
             if (Guid.Empty == userId)
@@ -80,24 +100,27 @@ namespace Lapka.Communication.Api.Controllers
                 request.Location.AsValueObject(), request.Photos.CreatePhotoFiles(), request.Description,
                 request.ReporterName, request.ReporterPhoneNumber));
 
-            return Created($"api/message/{messageId}/stray", null);
+            return Created($"api/message/{messageId}", null);
         }
         
         /// <summary>
-        /// Deletes a stray pet message
+        /// Creates message for adoption
         /// </summary>
-        [HttpDelete("{id:guid}/stray")]
-        public async Task<IActionResult> DeleteStrayPetMessage(Guid id)
+        [HttpPost("adopt")]
+        public async Task<IActionResult> CreateAdoptPetMessage([FromBody] CreateAdoptPetMessageRequest message)
         {
             Guid userId = await HttpContext.AuthenticateUsingJwtGetUserIdAsync();
-            if (Guid.Empty == userId)
+            if (userId == Guid.Empty)
             {
                 return Unauthorized();
             }
 
-            await _commandDispatcher.SendAsync(new DeleteStrayPetMessage(id, userId));
+            Guid id = Guid.NewGuid();
 
-            return NoContent();
+            await _commandDispatcher.SendAsync(new CreateAdoptPetMessage(id, userId, message.PetId, message.Description,
+                message.FullName, message.PhoneNumber));
+
+            return Created($"api/message/{id}", null);
         }
     }
 }

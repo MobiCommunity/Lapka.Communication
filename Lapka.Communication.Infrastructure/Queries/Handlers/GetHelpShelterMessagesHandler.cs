@@ -12,29 +12,29 @@ using Lapka.Communication.Infrastructure.Documents;
 
 namespace Lapka.Communication.Infrastructure.Queries.Handlers
 {
-    public class GetHelpShelterMessagesHandler : IQueryHandler<GetHelpShelterMessages, IEnumerable<HelpShelterMessageDto>>
+    public class GetHelpShelterMessagesHandler : IQueryHandler<GetShelterMessages, IEnumerable<ShelterMessageDto>>
     {
-        private readonly IMongoRepository<HelpShelterMessageDocument, Guid> _repository;
+        private readonly IMongoRepository<ShelterMessageDocument, Guid> _repository;
         private readonly IGrpcIdentityService _identityService;
 
-        public GetHelpShelterMessagesHandler(IMongoRepository<HelpShelterMessageDocument, Guid> repository,
+        public GetHelpShelterMessagesHandler(IMongoRepository<ShelterMessageDocument, Guid> repository,
             IGrpcIdentityService identityService)
         {
             _repository = repository;
             _identityService = identityService;
         }
 
-        public async Task<IEnumerable<HelpShelterMessageDto>> HandleAsync(GetHelpShelterMessages query)
+        public async Task<IEnumerable<ShelterMessageDto>> HandleAsync(GetShelterMessages query)
         {
             await CheckIfUserIsOwnerOfShelterAsync(query);
 
-            IReadOnlyList<HelpShelterMessageDocument> messages =
+            IReadOnlyList<ShelterMessageDocument> messages =
                 await _repository.FindAsync(x => x.ShelterId == query.ShelterId);
 
             return messages.Select(x => x.AsDto());
         }
 
-        private async Task CheckIfUserIsOwnerOfShelterAsync(GetHelpShelterMessages query)
+        private async Task CheckIfUserIsOwnerOfShelterAsync(GetShelterMessages query)
         {
             bool isUserOwner = await _identityService.IsUserOwnerOfShelterAsync(query.ShelterId, query.UserId);
             if (!isUserOwner)

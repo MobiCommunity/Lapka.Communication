@@ -36,9 +36,7 @@ namespace Lapka.Communication.Infrastructure
                 .AddErrorHandler<ExceptionToResponseMapper>()
                 .AddExceptionToMessageMapper<ExceptionToMessageMapper>()
                 .AddMongo()
-                .AddMongoRepository<AdoptPetMessageDocument, Guid>("adoptpetmessage")
-                .AddMongoRepository<StrayPetMessageDocument, Guid>("straypetmessage")
-                .AddMongoRepository<HelpShelterMessageDocument, Guid>("helpsheltermessage")
+                .AddMongoRepository<ShelterMessageDocument, Guid>("sheltermessage")
                 .AddMongoRepository<UserConversationDocument, Guid>("usersconversations")
                 .AddJwt()
                 // .AddRabbitMq()
@@ -63,10 +61,10 @@ namespace Lapka.Communication.Infrastructure
             services.AddTransient<IGrpcIdentityService, GrpcIdentityService>();
             services.AddTransient<IGrpcPhotoService, GrpcPhotoService>();
             services.AddTransient<IGrpcPetService, GrpcPetService>();
-            services.AddTransient<IAdoptPetMessageRepository, AdoptPetMessageRepository>();
-            services.AddTransient<IStrayPetMessageRepository, StrayPetMessageRepository>();
-            services.AddTransient<IHelpShelterMessageRepository, HelpShelterMessageRepository>();
+            services.AddTransient<IShelterMessageRepository, ShelterMessageRepository>();
+            services.AddTransient<IShelterMessageRepository, ShelterMessageRepository>();
             services.AddTransient<IUserConversationRepository, UserConversationRepository>();
+            services.AddTransient<IShelterMessageFactory, ShelterMessageFactory>();
 
             services.AddSingleton<IExceptionToResponseMapper, ExceptionToResponseMapper>();
             services.AddSingleton<IDomainToIntegrationEventMapper, DomainToIntegrationEventMapper>();

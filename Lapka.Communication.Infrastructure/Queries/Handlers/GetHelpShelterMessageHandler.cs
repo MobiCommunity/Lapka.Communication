@@ -10,21 +10,21 @@ using Lapka.Communication.Infrastructure.Documents;
 
 namespace Lapka.Communication.Infrastructure.Queries.Handlers
 {
-    public class GetHelpShelterMessageHandler : IQueryHandler<GetHelpShelterMessage, HelpShelterMessageDto>
+    public class GetHelpShelterMessageHandler : IQueryHandler<GetHelpShelterMessage, ShelterMessageDto>
     {
-        private readonly IMongoRepository<HelpShelterMessageDocument, Guid> _repository;
+        private readonly IMongoRepository<ShelterMessageDocument, Guid> _repository;
         private readonly IGrpcIdentityService _identityService;
 
-        public GetHelpShelterMessageHandler(IMongoRepository<HelpShelterMessageDocument, Guid> repository,
+        public GetHelpShelterMessageHandler(IMongoRepository<ShelterMessageDocument, Guid> repository,
             IGrpcIdentityService identityService)
         {
             _repository = repository;
             _identityService = identityService;
         }
 
-        public async Task<HelpShelterMessageDto> HandleAsync(GetHelpShelterMessage query)
+        public async Task<ShelterMessageDto> HandleAsync(GetHelpShelterMessage query)
         {
-            HelpShelterMessageDocument message = await GetHelpShelterMessageDocumentAsync(query);
+            ShelterMessageDocument message = await GetHelpShelterMessageDocumentAsync(query);
 
             await CheckIfUserIsAccessibleOfMessageAsync(query, message);
 
@@ -32,7 +32,7 @@ namespace Lapka.Communication.Infrastructure.Queries.Handlers
         }
 
         private async Task CheckIfUserIsAccessibleOfMessageAsync(GetHelpShelterMessage query,
-            HelpShelterMessageDocument message)
+            ShelterMessageDocument message)
         {
             bool isUserOwner = await _identityService.IsUserOwnerOfShelterAsync(message.ShelterId, query.UserId);
             if (!isUserOwner && message.UserId != query.UserId)
@@ -41,9 +41,9 @@ namespace Lapka.Communication.Infrastructure.Queries.Handlers
             }
         }
 
-        private async Task<HelpShelterMessageDocument> GetHelpShelterMessageDocumentAsync(GetHelpShelterMessage query)
+        private async Task<ShelterMessageDocument> GetHelpShelterMessageDocumentAsync(GetHelpShelterMessage query)
         {
-            HelpShelterMessageDocument message = await _repository.GetAsync(x => x.Id == query.MessageId);
+            ShelterMessageDocument message = await _repository.GetAsync(x => x.Id == query.MessageId);
             if (message is null)
             {
                 throw new MessageNotFoundException(query.MessageId);
