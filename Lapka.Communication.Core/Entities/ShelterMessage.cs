@@ -9,6 +9,7 @@ namespace Lapka.Communication.Core.Entities
     {
         public Guid UserId { get; }
         public Guid ShelterId { get; }
+        public bool IsRead { get; private set; }
         public string Title { get; }
         public MessageDescription Description { get; }
         public FullName FullName { get; }
@@ -16,7 +17,7 @@ namespace Lapka.Communication.Core.Entities
         public DateTime CreatedAt { get; }
 
 
-        public ShelterMessage(Guid id, Guid userId, Guid shelterId, string title, MessageDescription description,
+        public ShelterMessage(Guid id, Guid userId, Guid shelterId, bool isRead, string title, MessageDescription description,
             FullName fullName, PhoneNumber phoneNumber, DateTime createdAt)
         {
             ValidateMessage(userId, shelterId);
@@ -24,6 +25,7 @@ namespace Lapka.Communication.Core.Entities
             Id = new AggregateId(id);
             UserId = userId;
             ShelterId = shelterId;
+            IsRead = isRead;
             Title = title;
             Description = description;
             FullName = fullName;
@@ -31,14 +33,20 @@ namespace Lapka.Communication.Core.Entities
             CreatedAt = createdAt;
         }
 
-        public static ShelterMessage Create(Guid id, Guid userId, Guid shelterId, string title, string description,
+        public static ShelterMessage Create(Guid id, Guid userId, Guid shelterId, bool isRead, string title, string description,
             string fullName, string phoneNumber, DateTime createdAt)
         {
-            ShelterMessage shelterMessage = new ShelterMessage(id, userId, shelterId, title,
+            ShelterMessage shelterMessage = new ShelterMessage(id, userId, shelterId, isRead, title,
                 new MessageDescription(description), new FullName(fullName), new PhoneNumber(phoneNumber), createdAt);
             
             shelterMessage.AddEvent(new ShelterMessageCreated(shelterMessage));
             return shelterMessage;
+        }
+
+        public void MarkAsRead()
+        {
+            IsRead = true;
+            AddEvent(new ShelterMessageRead(this));
         }
 
         private void ValidateMessage(Guid userId, Guid shelterId)

@@ -9,6 +9,7 @@ namespace Lapka.Communication.Infrastructure.Documents
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
         public Guid ShelterId { get; set; }
+        public bool IsRead { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public string FullName { get; set; }

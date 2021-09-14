@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using Lapka.Communication.Core.Entities;
 using Lapka.Communication.Core.ValueObjects;
@@ -22,31 +21,11 @@ namespace Lapka.Communication.Unit.Tests
             string validFullName = fullName ?? "Mikolaj mikołajczyk";
             string validPhoneNumber = phoneNumber ?? "123123123";
 
-            ShelterMessage message = ShelterMessage.Create(validId.Value, validUserId, validShelterId, validTitle,
+            ShelterMessage message = ShelterMessage.Create(validId.Value, validUserId, validShelterId, false, validTitle,
                 validDescription, validFullName, validPhoneNumber, DateTime.Now);
 
             return message;
         }
-
-        // public static ShelterMessage ArrangeShelterMessage(AggregateId id = null, Guid? userId = null,
-        //     Guid? shelterId = null, string title = null, MessageDescription description = null, FullName fullName = null,
-        //     PhoneNumber phoneNumber = null)
-        // {
-        //     AggregateId validId = id ?? new AggregateId();
-        //     Guid validUserId = userId ?? Guid.NewGuid();
-        //     Guid validShelterId = shelterId ?? Guid.NewGuid();
-        //     string validTitle = title ?? "This is valid Title";
-        //     MessageDescription validDescription = description ??
-        //                                           new MessageDescription(
-        //                                               "I want to adopt this pet because this pet is the coolest pet i have ever seen.");
-        //     FullName validFullName = fullName ?? new FullName("Mikolaj mikołajczyk");
-        //     PhoneNumber validPhoneNumber = phoneNumber ?? new PhoneNumber("123123123");
-        //
-        //     ShelterMessage message = new ShelterMessage(validId.Value, validUserId, validShelterId, validTitle,
-        //         validDescription, validFullName, validPhoneNumber, DateTime.Now);
-        //
-        //     return message;
-        // }
 
         public static Location ArrangeLocation(string latitude = null, string longitude = null)
         {

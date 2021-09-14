@@ -15,7 +15,7 @@ namespace Lapka.Communication.Infrastructure.Services
             msgDescription.Append($"Z użytkownikiem można się skontakować dzwoniąc pod: {message.PhoneNumber}. ");
             msgDescription.Append($"Użytkownik do adopcji dołaczył wiadomość o treści: {message.Description}");
 
-            ShelterMessage shelterMessage = ShelterMessage.Create(message.Id, message.UserId, shelterId,
+            ShelterMessage shelterMessage = ShelterMessage.Create(message.Id, message.UserId, shelterId, false,
                 "Adopcja zwierzaka", msgDescription.ToString(), message.FullName, message.PhoneNumber,
                 DateTime.Now);
 
@@ -30,9 +30,8 @@ namespace Lapka.Communication.Infrastructure.Services
             msgDescription.Append($"Z użytkownikiem można się skontakować dzwoniąc pod: {message.PhoneNumber}. ");
             msgDescription.Append($"Użytkownik do chęci pomocy dołaczył wiadomość o treści: {message.Description}");
 
-            ShelterMessage shelterMessage = ShelterMessage.Create(message.Id, message.UserId, message.ShelterId,
-                "Adopcja zwierzaka", msgDescription.ToString(), message.FullName, message.PhoneNumber,
-                DateTime.Now);
+            ShelterMessage shelterMessage = ShelterMessage.Create(message.Id, message.UserId, message.ShelterId, false,
+                "Adopcja zwierzaka", msgDescription.ToString(), message.FullName, message.PhoneNumber, DateTime.Now);
 
             return shelterMessage;
         }
@@ -41,10 +40,11 @@ namespace Lapka.Communication.Infrastructure.Services
         {
             StringBuilder msgDescription = new StringBuilder();
             msgDescription.Append($"Użytkownik {message.ReporterName} chce zgłasza błakającego sie zwierzaka. ");
-            msgDescription.Append($"Z użytkownikiem można się skontakować dzwoniąc pod: {message.ReporterPhoneNumber}. ");
+            msgDescription.Append(
+                $"Z użytkownikiem można się skontakować dzwoniąc pod: {message.ReporterPhoneNumber}. ");
             msgDescription.Append($"Użytkownik do zgłoszenia dołaczył wiadomość o treści: {message.Description}");
 
-            ShelterMessage shelterMessage = ShelterMessage.Create(message.Id, message.UserId, shelterId,
+            ShelterMessage shelterMessage = ShelterMessage.Create(message.Id, message.UserId, shelterId, false,
                 "Błąkający się zwierzak", msgDescription.ToString(), message.ReporterName, message.ReporterPhoneNumber,
                 DateTime.Now);
 

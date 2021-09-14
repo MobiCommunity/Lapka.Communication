@@ -28,7 +28,7 @@ namespace Lapka.Communication.Infrastructure.Queries.Handlers
             IReadOnlyList<UserConversationDocument> conversations =
                 await _repository.FindAsync(x => x.Members.Any(x => x == query.UserId));
 
-            return conversations.Select(x => x.AsDto());
+            return conversations.Select(x => x.AsBasicDto(query.UserId));
         }
     }
 }

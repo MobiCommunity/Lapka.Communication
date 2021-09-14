@@ -122,5 +122,22 @@ namespace Lapka.Communication.Api.Controllers
 
             return Created($"api/message/{id}", null);
         }
+        
+        /// <summary>
+        /// Marks message as read
+        /// </summary>
+        [HttpPatch("{id}/read")]
+        public async Task<IActionResult> MarkAsReadMessage(Guid id)
+        {
+            Guid userId = await HttpContext.AuthenticateUsingJwtGetUserIdAsync();
+            if (userId == Guid.Empty)
+            {
+                return Unauthorized();
+            }
+            
+            await _commandDispatcher.SendAsync(new MarkShelterMessageAsRead(userId, id));
+
+            return NoContent();
+        }
     }
 }
