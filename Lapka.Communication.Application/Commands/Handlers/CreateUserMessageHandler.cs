@@ -22,7 +22,7 @@ namespace Lapka.Communication.Application.Commands.Handlers
         {
             UserConversation conversation = await GetAndValidConversationAsync(command);
             
-            UserMessage message = new UserMessage(command.UserId, command.Message, command.CreatedAt);
+            UserMessage message = new UserMessage(command.UserId, command.Message, false, command.CreatedAt);
             conversation.AddMessage(message);
             
             await _repository.UpdateAsync(conversation);

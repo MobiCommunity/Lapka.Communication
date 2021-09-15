@@ -10,5 +10,6 @@ namespace Lapka.Communication.Application.Services
         public Task<ShelterMessage> GetAsync(Guid messageId);
         public Task<IEnumerable<ShelterMessage>> GetAllAsync(Guid shelterId);
         public Task AddAsync(ShelterMessage message);
+        public Task UpdateAsync(ShelterMessage message);
     }
 }

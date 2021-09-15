@@ -66,7 +66,7 @@ namespace Lapka.Communication.Api.Controllers
         /// Creates message for help shelter
         /// </summary>
         [HttpPost("help")]
-        public async Task<IActionResult> CreateHelpShelterMessage([FromBody] CreateHelpShelterMessageRequest message)
+        public async Task<IActionResult> CreateHelpShelterMessage(CreateHelpShelterMessageRequest message)
         {
             Guid userId = await HttpContext.AuthenticateUsingJwtGetUserIdAsync();
             if (userId == Guid.Empty)
@@ -107,7 +107,7 @@ namespace Lapka.Communication.Api.Controllers
         /// Creates message for adoption
         /// </summary>
         [HttpPost("adopt")]
-        public async Task<IActionResult> CreateAdoptPetMessage([FromBody] CreateAdoptPetMessageRequest message)
+        public async Task<IActionResult> CreateAdoptPetMessage(CreateAdoptPetMessageRequest message)
         {
             Guid userId = await HttpContext.AuthenticateUsingJwtGetUserIdAsync();
             if (userId == Guid.Empty)
@@ -121,6 +121,23 @@ namespace Lapka.Communication.Api.Controllers
                 message.FullName, message.PhoneNumber));
 
             return Created($"api/message/{id}", null);
+        }
+        
+        /// <summary>
+        /// Marks message as read
+        /// </summary>
+        [HttpPatch("{id}/read")]
+        public async Task<IActionResult> MarkAsReadMessage(Guid id)
+        {
+            Guid userId = await HttpContext.AuthenticateUsingJwtGetUserIdAsync();
+            if (userId == Guid.Empty)
+            {
+                return Unauthorized();
+            }
+            
+            await _commandDispatcher.SendAsync(new MarkShelterMessageAsRead(userId, id));
+
+            return NoContent();
         }
     }
 }

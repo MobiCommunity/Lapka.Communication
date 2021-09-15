@@ -22,13 +22,13 @@ namespace Lapka.Communication.Infrastructure.Queries.Handlers
         {
             UserConversationDocument conversation = await GetUserConversationDocumentAsync(query);
 
-            CheckIfUserIsAccessibleOfConversationAsync(query, conversation);
+            CheckIfUserIsAccessibleOfConversation(query, conversation);
 
             conversation.Messages = conversation.Messages.OrderByDescending(x => x.CreatedAt).ToList();
-            return conversation.AsDto(query.UserId);
+            return conversation.AsDetailDto(query.UserId);
         }
 
-        private static void CheckIfUserIsAccessibleOfConversationAsync(GetUserConversation query,
+        private static void CheckIfUserIsAccessibleOfConversation(GetUserConversation query,
             UserConversationDocument conversation)
         {
             if (conversation.Members.All(x => x != query.UserId))

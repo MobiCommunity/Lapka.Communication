@@ -11,7 +11,7 @@ namespace Lapka.Communication.Infrastructure.Documents
     {
         public static ShelterMessage AsBusiness(this ShelterMessageDocument message)
         {
-            return new ShelterMessage(message.Id, message.UserId, message.ShelterId, message.Title,
+            return new ShelterMessage(message.Id, message.UserId, message.ShelterId, message.IsRead, message.Title,
                 new MessageDescription(message.Description), new FullName(message.FullName),
                 new PhoneNumber(message.PhoneNumber), message.CreatedAt);
         }
@@ -23,6 +23,8 @@ namespace Lapka.Communication.Infrastructure.Documents
                 Id = message.Id.Value,
                 UserId = message.UserId,
                 ShelterId = message.ShelterId,
+                IsRead = message.IsRead,
+                Title = message.Title,
                 Description = message.Description.Value,
                 FullName = message.FullName.Value,
                 PhoneNumber = message.PhoneNumber.Value,
@@ -44,7 +46,7 @@ namespace Lapka.Communication.Infrastructure.Documents
             };
         }
 
-        public static UserDetailedConversationDto AsDto(this UserConversationDocument message, Guid userId)
+        public static UserDetailedConversationDto AsDetailDto(this UserConversationDocument message, Guid userId)
         {
             return new UserDetailedConversationDto
             {
@@ -71,7 +73,7 @@ namespace Lapka.Communication.Infrastructure.Documents
 
         public static UserMessage AsBusiness(this UserMessageDocument message)
         {
-            return new UserMessage(message.SenderUserId, message.Message, message.CreatedAt);
+            return new UserMessage(message.SenderUserId,  message.Message, message.IsReadByReceiver, message.CreatedAt);
         }
 
         public static UserMessageDocument AsDocument(this UserMessage message)
@@ -80,6 +82,7 @@ namespace Lapka.Communication.Infrastructure.Documents
             {
                 SenderUserId = message.SenderUserId,
                 Message = message.Message,
+                IsReadByReceiver = message.IsReadByReceiver,
                 CreatedAt = message.CreatedAt,
             };
         }
@@ -94,7 +97,7 @@ namespace Lapka.Communication.Infrastructure.Documents
             };
         }
 
-        public static UserBasicConversationDto AsDto(this UserConversationDocument conversation)
+        public static UserBasicConversationDto AsBasicDto(this UserConversationDocument conversation, Guid userId)
         {
             UserMessageDocument lastMessage =
                 conversation.Messages.OrderByDescending(x => x.CreatedAt).FirstOrDefault();
@@ -103,6 +106,8 @@ namespace Lapka.Communication.Infrastructure.Documents
             {
                 ConversationId = conversation.Id,
                 LastMessage = lastMessage.Message,
+                IsLastMeesageReadByReceiver = lastMessage.IsReadByReceiver,
+                IsUserReceiverOfLastMessage = lastMessage.SenderUserId != userId,
                 LastMessageCreation = lastMessage.CreatedAt
             };
         }

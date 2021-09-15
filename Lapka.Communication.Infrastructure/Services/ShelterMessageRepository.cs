@@ -37,5 +37,10 @@ namespace Lapka.Communication.Infrastructure.Services
         {
             await _repository.AddAsync(message.AsDocument());
         }
+
+        public async Task UpdateAsync(ShelterMessage message)
+        {
+            await _repository.UpdateAsync(message.AsDocument());
+        }
     }
 }

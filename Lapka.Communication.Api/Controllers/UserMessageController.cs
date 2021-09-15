@@ -65,7 +65,7 @@ namespace Lapka.Communication.Api.Controllers
         /// Sends message to user
         /// </summary>
         [HttpPost("user/{id:guid}")]
-        public async Task<IActionResult> SendMessage(Guid id, [FromBody] CreateMessageRequest message)
+        public async Task<IActionResult> SendMessage(Guid id, CreateMessageRequest message)
         {
             Guid userId = await HttpContext.AuthenticateUsingJwtGetUserIdAsync();
             if (userId == Guid.Empty)
@@ -75,11 +75,29 @@ namespace Lapka.Communication.Api.Controllers
 
             DateTime createdAt = DateTime.Now;
 
-            await _commandDispatcher.SendAsync(new CreateUserMessage(userId, id, message.Description, createdAt));
+            await _commandDispatcher.SendAsync(new CreateUserMessage(userId, id, message.Description,
+                createdAt));
 
             return NoContent();
         }
         
+        /// <summary>
+        /// Marks user not read messages as read
+        /// </summary>
+        [HttpPatch("{id:guid}")]
+        public async Task<IActionResult> MarkAsReadMessages(Guid id)
+        {
+            Guid userId = await HttpContext.AuthenticateUsingJwtGetUserIdAsync();
+            if (userId == Guid.Empty)
+            {
+                return Unauthorized();
+            }
+            
+            await _commandDispatcher.SendAsync(new MarkUserMessageAsRead(userId, id));
+
+            return NoContent();
+        }
+
         /// <summary>
         /// Deletes conversation
         /// </summary>
@@ -91,7 +109,7 @@ namespace Lapka.Communication.Api.Controllers
             {
                 return Unauthorized();
             }
-            
+
             await _commandDispatcher.SendAsync(new DeleteUserConversation(userId, id));
 
             return NoContent();
