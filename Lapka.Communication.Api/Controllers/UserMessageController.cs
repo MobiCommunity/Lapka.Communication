@@ -65,7 +65,7 @@ namespace Lapka.Communication.Api.Controllers
         /// Sends message to user
         /// </summary>
         [HttpPost("user/{id:guid}")]
-        public async Task<IActionResult> SendMessage(Guid id, [FromBody] CreateMessageRequest message)
+        public async Task<IActionResult> SendMessage(Guid id, CreateMessageRequest message)
         {
             Guid userId = await HttpContext.AuthenticateUsingJwtGetUserIdAsync();
             if (userId == Guid.Empty)

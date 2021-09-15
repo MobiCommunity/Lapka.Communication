@@ -66,7 +66,7 @@ namespace Lapka.Communication.Api.Controllers
         /// Creates message for help shelter
         /// </summary>
         [HttpPost("help")]
-        public async Task<IActionResult> CreateHelpShelterMessage([FromBody] CreateHelpShelterMessageRequest message)
+        public async Task<IActionResult> CreateHelpShelterMessage(CreateHelpShelterMessageRequest message)
         {
             Guid userId = await HttpContext.AuthenticateUsingJwtGetUserIdAsync();
             if (userId == Guid.Empty)
@@ -107,7 +107,7 @@ namespace Lapka.Communication.Api.Controllers
         /// Creates message for adoption
         /// </summary>
         [HttpPost("adopt")]
-        public async Task<IActionResult> CreateAdoptPetMessage([FromBody] CreateAdoptPetMessageRequest message)
+        public async Task<IActionResult> CreateAdoptPetMessage(CreateAdoptPetMessageRequest message)
         {
             Guid userId = await HttpContext.AuthenticateUsingJwtGetUserIdAsync();
             if (userId == Guid.Empty)
