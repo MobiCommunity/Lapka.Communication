@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Convey.CQRS.Queries;
@@ -9,19 +10,22 @@ using Lapka.Communication.Application.Services.Grpc;
 using Lapka.Communication.Core.Entities;
 using Lapka.Communication.Infrastructure.Elastic.Options;
 using Lapka.Communication.Infrastructure.Mongo.Documents;
+using Microsoft.Extensions.Logging;
 using Nest;
 
 namespace Lapka.Communication.Infrastructure.Elastic.Queries.Handlers
 {
     public class GetShelterMessagesHandler : IQueryHandler<GetShelterMessages, IEnumerable<ShelterMessageDto>>
     {
+        private readonly ILogger<GetShelterMessagesHandler> _logger;
         private readonly IElasticClient _elasticClient;
         private readonly ElasticSearchOptions _elasticSearchOptions;
         private readonly IGrpcIdentityService _identityService;
 
-        public GetShelterMessagesHandler(IElasticClient elasticClient, ElasticSearchOptions elasticSearchOptions,
-            IGrpcIdentityService identityService)
+        public GetShelterMessagesHandler(ILogger<GetShelterMessagesHandler> logger, IElasticClient elasticClient,
+            ElasticSearchOptions elasticSearchOptions, IGrpcIdentityService identityService)
         {
+            _logger = logger;
             _elasticClient = elasticClient;
             _elasticSearchOptions = elasticSearchOptions;
             _identityService = identityService;
@@ -55,7 +59,17 @@ namespace Lapka.Communication.Infrastructure.Elastic.Queries.Handlers
 
         private async Task CheckIfUserIsOwnerOfShelterAsync(GetShelterMessages query)
         {
-            bool isUserOwner = await _identityService.IsUserOwnerOfShelterAsync(query.ShelterId, query.UserId);
+            bool isUserOwner = false;
+            try
+            {
+                isUserOwner = await _identityService.IsUserOwnerOfShelterAsync(query.ShelterId, query.UserId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "failed to connect with identity microservice.");
+                isUserOwner = false;
+            }
+
             if (!isUserOwner)
             {
                 throw new UserNotOwnerOfShelterException(query.ShelterId, query.UserId);
