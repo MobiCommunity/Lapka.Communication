@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Lapka.Communication.Application.Commands;
+using Lapka.Communication.Application.Commands.ShelterMessages;
 using Lapka.Communication.Core.Entities;
 using Lapka.Communication.Core.ValueObjects;
 

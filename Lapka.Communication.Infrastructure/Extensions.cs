@@ -13,14 +13,23 @@ using Convey.Auth;
 using Convey.Persistence.MongoDB;
 using Lapka.Communication.Application.Events.Abstract;
 using Lapka.Communication.Application.Services;
-using Lapka.Communication.Infrastructure.Documents;
+using Lapka.Communication.Application.Services.Elastic;
+using Lapka.Communication.Application.Services.Grpc;
+using Lapka.Communication.Application.Services.Repositories;
+using Lapka.Communication.Core.Entities;
+using Lapka.Communication.Infrastructure.Elastic.Options;
+using Lapka.Communication.Infrastructure.Elastic.Services;
 using Lapka.Communication.Infrastructure.Exceptions;
-using Lapka.Communication.Infrastructure.Options;
+using Lapka.Communication.Infrastructure.Grpc.Options;
+using Lapka.Communication.Infrastructure.Grpc.Services;
+using Lapka.Communication.Infrastructure.Mongo.Documents;
+using Lapka.Communication.Infrastructure.Mongo.Repositories;
 using Lapka.Communication.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Nest;
 
 
 namespace Lapka.Communication.Infrastructure
@@ -58,20 +67,6 @@ namespace Lapka.Communication.Infrastructure
             ServiceProvider provider = services.BuildServiceProvider();
             IConfiguration configuration = provider.GetService<IConfiguration>();
 
-            services.AddTransient<IGrpcIdentityService, GrpcIdentityService>();
-            services.AddTransient<IGrpcPhotoService, GrpcPhotoService>();
-            services.AddTransient<IGrpcPetService, GrpcPetService>();
-            services.AddTransient<IShelterMessageRepository, ShelterMessageRepository>();
-            services.AddTransient<IShelterMessageRepository, ShelterMessageRepository>();
-            services.AddTransient<IUserConversationRepository, UserConversationRepository>();
-            services.AddTransient<IShelterMessageFactory, ShelterMessageFactory>();
-
-            services.AddSingleton<IExceptionToResponseMapper, ExceptionToResponseMapper>();
-            services.AddSingleton<IDomainToIntegrationEventMapper, DomainToIntegrationEventMapper>();
-
-            services.AddTransient<IEventProcessor, EventProcessor>();
-            services.AddTransient<IMessageBroker, DummyMessageBroker>();
-            
             FilesMicroserviceOptions filesMicroserviceOptions = new FilesMicroserviceOptions();
             configuration.GetSection("filesMicroservice").Bind(filesMicroserviceOptions);
             services.AddSingleton(filesMicroserviceOptions);
@@ -83,6 +78,26 @@ namespace Lapka.Communication.Infrastructure
             PetsMicroserviceOptions petsMicroserviceOptions = new PetsMicroserviceOptions();
             configuration.GetSection("petsMicroservice").Bind(petsMicroserviceOptions);
             services.AddSingleton(petsMicroserviceOptions);
+            
+            ElasticSearchOptions elasticSearchOptions = new ElasticSearchOptions();
+            configuration.GetSection("elasticSearch").Bind(elasticSearchOptions);
+            services.AddSingleton(elasticSearchOptions);
+            ConnectionSettings elasticConnectionSettings = new ConnectionSettings(new Uri(elasticSearchOptions.Url));
+            
+            services.AddSingleton<IExceptionToResponseMapper, ExceptionToResponseMapper>();
+            services.AddSingleton<IDomainToIntegrationEventMapper, DomainToIntegrationEventMapper>();
+            services.AddSingleton<IElasticClient>(new ElasticClient(elasticConnectionSettings));
+
+            services.AddTransient<IGrpcIdentityService, GrpcIdentityService>();
+            services.AddTransient<IGrpcPhotoService, GrpcPhotoService>();
+            services.AddTransient<IGrpcPetService, GrpcPetService>();
+            services.AddTransient<IShelterMessageRepository, ShelterMessageRepository>();
+            services.AddTransient<IUserConversationRepository, UserConversationRepository>();
+            services.AddTransient<IShelterMessageFactory, ShelterMessageFactory>();
+            services.AddTransient<IShelterMessageElasticsearchUpdater, ShelterMessageElasticsearchUpdater>();
+            services.AddTransient<IUserConversationElasticsearchUpdater, UserConversationElasticsearchUpdater>();
+            services.AddTransient<IEventProcessor, EventProcessor>();
+            services.AddTransient<IMessageBroker, DummyMessageBroker>();
             
             services.AddGrpcClient<PhotoProto.PhotoProtoClient>(o =>
             {
@@ -98,11 +113,14 @@ namespace Lapka.Communication.Infrastructure
             {
                 o.Address = new Uri(petsMicroserviceOptions.UrlHttp2);
             });
+            
+            services.AddHostedService<ElasticSearchSeeder>();
+
 
             builder.Services.Scan(s => s.FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())
                 .AddClasses(c => c.AssignableTo(typeof(IDomainEventHandler<>)))
                 .AsImplementedInterfaces().WithTransientLifetime());
-
+            
             return builder;
         }
 

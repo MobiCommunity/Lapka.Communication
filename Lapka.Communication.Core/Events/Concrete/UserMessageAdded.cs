@@ -6,12 +6,10 @@ namespace Lapka.Communication.Core.Events.Concrete
     public class UserMessageAdded : IDomainEvent
     {
         public UserConversation Conversation { get; }
-        public UserMessage Message { get; }
 
-        public UserMessageAdded(UserConversation conversation, UserMessage message)
+        public UserMessageAdded(UserConversation conversation)
         {
             Conversation = conversation;
-            Message = message;
         }
     }
 }

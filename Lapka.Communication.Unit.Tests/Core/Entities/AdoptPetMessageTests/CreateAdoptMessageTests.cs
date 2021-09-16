@@ -15,7 +15,7 @@ namespace Lapka.Communication.Unit.Tests.Core.Entities.AdoptPetMessageTests
     {
         private ShelterMessage Act(AggregateId id, Guid userId, Guid shelterId, string title, string description,
             string fullName, string phoneNumber) => ShelterMessage.Create(id.Value, userId, shelterId, false, title,
-            description, fullName, phoneNumber, DateTime.Now);
+            description, fullName, phoneNumber, DateTime.UtcNow);
 
         [Fact]
         public void given_valid_adopt_message_should_be_created()

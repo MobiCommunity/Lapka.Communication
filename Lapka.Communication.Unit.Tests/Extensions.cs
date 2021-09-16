@@ -22,7 +22,7 @@ namespace Lapka.Communication.Unit.Tests
             string validPhoneNumber = phoneNumber ?? "123123123";
 
             ShelterMessage message = ShelterMessage.Create(validId.Value, validUserId, validShelterId, false, validTitle,
-                validDescription, validFullName, validPhoneNumber, DateTime.Now);
+                validDescription, validFullName, validPhoneNumber, DateTime.UtcNow);
 
             return message;
         }

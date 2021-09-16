@@ -350,6 +350,10 @@
             "Grpc.AspNetCore": {
               "target": "Package",
               "version": "[2.39.0, )"
+            },
+            "NEST": {
+              "target": "Package",
+              "version": "[7.14.1, )"
             }
           },
           "imports": [

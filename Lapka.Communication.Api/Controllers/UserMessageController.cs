@@ -4,6 +4,7 @@ using Convey.CQRS.Commands;
 using Convey.CQRS.Queries;
 using Lapka.Communication.Api.Models.Request;
 using Lapka.Communication.Application.Commands;
+using Lapka.Communication.Application.Commands.Conversations;
 using Lapka.Communication.Application.Queries;
 using Lapka.Communication.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
@@ -73,7 +74,7 @@ namespace Lapka.Communication.Api.Controllers
                 return Unauthorized();
             }
 
-            DateTime createdAt = DateTime.Now;
+            DateTime createdAt = DateTime.UtcNow;
 
             await _commandDispatcher.SendAsync(new CreateUserMessage(userId, id, message.Description,
                 createdAt));

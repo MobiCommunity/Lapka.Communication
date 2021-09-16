@@ -5,6 +5,7 @@ using Convey.CQRS.Queries;
 using Lapka.Communication.Api.Models;
 using Lapka.Communication.Api.Models.Request;
 using Lapka.Communication.Application.Commands;
+using Lapka.Communication.Application.Commands.ShelterMessages;
 using Lapka.Communication.Application.Queries;
 using Lapka.Communication.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
