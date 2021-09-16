@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using Lapka.Communication.Application.Commands;
+using Lapka.Communication.Application.Commands.ShelterMessages;
 using Lapka.Communication.Application.Services;
 using Lapka.Communication.Core.Entities;
 
@@ -17,7 +18,7 @@ namespace Lapka.Communication.Infrastructure.Services
 
             ShelterMessage shelterMessage = ShelterMessage.Create(message.Id, message.UserId, shelterId, false,
                 "Adopcja zwierzaka", msgDescription.ToString(), message.FullName, message.PhoneNumber,
-                DateTime.Now);
+                DateTime.UtcNow);
 
             return shelterMessage;
         }
@@ -31,7 +32,7 @@ namespace Lapka.Communication.Infrastructure.Services
             msgDescription.Append($"Użytkownik do chęci pomocy dołaczył wiadomość o treści: {message.Description}");
 
             ShelterMessage shelterMessage = ShelterMessage.Create(message.Id, message.UserId, message.ShelterId, false,
-                "Adopcja zwierzaka", msgDescription.ToString(), message.FullName, message.PhoneNumber, DateTime.Now);
+                "Adopcja zwierzaka", msgDescription.ToString(), message.FullName, message.PhoneNumber, DateTime.UtcNow);
 
             return shelterMessage;
         }
@@ -46,7 +47,7 @@ namespace Lapka.Communication.Infrastructure.Services
 
             ShelterMessage shelterMessage = ShelterMessage.Create(message.Id, message.UserId, shelterId, false,
                 "Błąkający się zwierzak", msgDescription.ToString(), message.ReporterName, message.ReporterPhoneNumber,
-                DateTime.Now);
+                DateTime.UtcNow);
 
             return shelterMessage;
         }

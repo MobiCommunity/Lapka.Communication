@@ -27,7 +27,7 @@ namespace Lapka.Communication.Core.Entities
         public void AddMessage(UserMessage message)
         {
             Messages.Add(message);
-            AddEvent(new UserMessageAdded(this, message));
+            AddEvent(new UserMessageAdded(this));
         }
 
         public void Delete()

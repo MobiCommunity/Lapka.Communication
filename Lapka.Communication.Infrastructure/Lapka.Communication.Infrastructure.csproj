@@ -20,6 +20,7 @@
         <PackageReference Include="Convey.Persistence.MongoDB" Version="0.4.360" />
         <PackageReference Include="Convey.WebApi.CQRS" Version="0.4.360" />
         <PackageReference Include="Grpc.AspNetCore" Version="2.39.0" />
+        <PackageReference Include="NEST" Version="7.14.1" />
 
     </ItemGroup>
 
@@ -29,9 +30,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Protobuf Include="gRPC\Protos\identity.proto" GrpcServices="Client" />
-        <Protobuf Include="gRPC\Protos\photo.proto" GrpcServices="Client" />
-        <Protobuf Include="gRPC\Protos\pet.proto" GrpcServices="Client" />
+        <Protobuf Include="Grpc\Protos\identity.proto" GrpcServices="Client" />
+        <Protobuf Include="Grpc\Protos\photo.proto" GrpcServices="Client" />
+        <Protobuf Include="Grpc\Protos\pet.proto" GrpcServices="Client" />
     </ItemGroup>
 
 </Project>
