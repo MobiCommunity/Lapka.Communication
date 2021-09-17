@@ -14,23 +14,23 @@ namespace Lapka.Communication.Application.Commands.Handlers.ShelterMessages
     {
         private readonly IEventProcessor _eventProcessor;
         private readonly IShelterMessageRepository _repository;
-        private readonly IGrpcIdentityService _grpcIdentityService;
         private readonly IShelterMessageFactory _messageFactory;
+        private readonly IShelterRepository _shelterRepository;
 
         public CreateHelpShelterMessageHandler(IEventProcessor eventProcessor, IShelterMessageRepository repository,
-            IGrpcIdentityService grpcIdentityService, IShelterMessageFactory messageFactory)
+            IShelterMessageFactory messageFactory, IShelterRepository shelterRepository)
         {
             _eventProcessor = eventProcessor;
             _repository = repository;
-            _grpcIdentityService = grpcIdentityService;
             _messageFactory = messageFactory;
+            _shelterRepository = shelterRepository;
         }
 
         public async Task HandleAsync(CreateHelpShelterMessage command)
         {
             await ValidShelterExistenceAsync(command);
             
-            ShelterMessage message = _messageFactory.CreateHelpShelterMessage(command);
+            ShelterMessage message = _messageFactory.CreateFromHelpShelterMessage(command);
 
             await _repository.AddAsync(message);
             await _eventProcessor.ProcessAsync(message.Events);
@@ -38,20 +38,11 @@ namespace Lapka.Communication.Application.Commands.Handlers.ShelterMessages
 
         private async Task ValidShelterExistenceAsync(CreateHelpShelterMessage command)
         {
-            try
+
+            Shelter shelter = await _shelterRepository.GetAsync(command.ShelterId);
+            if (shelter is null)
             {
-                if (!await _grpcIdentityService.DoesShelterExists(command.ShelterId))
-                {
-                    throw new ShelterDoesNotExistsException(command.ShelterId);
-                }
-            }
-            catch (Exception ex)
-            {
-                if (ex.GetType() == typeof(ShelterDoesNotExistsException))
-                {
-                    throw new ShelterDoesNotExistsException(command.ShelterId);
-                }
-                throw new CannotRequestIdentityMicroserviceException(ex);
+                throw new ShelterDoesNotExistsException(command.ShelterId);
             }
         }
     }

@@ -25,7 +25,7 @@ namespace Lapka.Communication.Unit.Tests.Application.Handlers.HelpShelterMessage
     public class CreateHelpShelterMessageTests
     {
         private readonly IEventProcessor _eventProcessor;
-        private readonly IGrpcIdentityService _grpcIdentityService;
+        private readonly IShelterRepository _shelterRepository;
         private readonly CreateHelpShelterMessageHandler _handler;
         private readonly IShelterMessageRepository _repository;
         private readonly IShelterMessageFactory _shelterMessageFactory;
@@ -34,10 +34,10 @@ namespace Lapka.Communication.Unit.Tests.Application.Handlers.HelpShelterMessage
         {
             _repository = Substitute.For<IShelterMessageRepository>();
             _shelterMessageFactory = Substitute.For<IShelterMessageFactory>();
-            _grpcIdentityService = Substitute.For<IGrpcIdentityService>();
+            _shelterRepository = Substitute.For<IShelterRepository>();
             _eventProcessor = Substitute.For<IEventProcessor>();
-            _handler = new CreateHelpShelterMessageHandler(_eventProcessor, _repository, _grpcIdentityService,
-                _shelterMessageFactory);
+            _handler = new CreateHelpShelterMessageHandler(_eventProcessor, _repository, _shelterMessageFactory,
+                _shelterRepository);
         }
 
         private Task Act(CreateHelpShelterMessage command)
@@ -50,20 +50,21 @@ namespace Lapka.Communication.Unit.Tests.Application.Handlers.HelpShelterMessage
         {
             ShelterMessage message = Extensions.ArrangeShelterMessage();
             HelpType helpType = HelpType.Walk;
+            Shelter shelter = new Shelter(Guid.NewGuid(), new Location("33", "44"));
 
             CreateHelpShelterMessage command = new CreateHelpShelterMessage(message.Id.Value, message.UserId,
                 message.ShelterId, helpType, message.Description.Value, message.FullName.Value,
                 message.PhoneNumber.Value);
 
-            _grpcIdentityService.DoesShelterExists(message.ShelterId).Returns(true);
-            _shelterMessageFactory.CreateHelpShelterMessage(command).Returns(message);
+            _shelterRepository.GetAsync(message.ShelterId).Returns(shelter);
+            _shelterMessageFactory.CreateFromHelpShelterMessage(command).Returns(message);
 
             await Act(command);
 
             await _repository.Received()
                 .AddAsync(Arg.Is<ShelterMessage>(m =>
                     m.Id.Value == message.Id.Value && m.ShelterId == message.ShelterId && m.UserId == message.UserId &&
-                    m.ShelterId == message.ShelterId && 
+                    m.ShelterId == message.ShelterId &&
                     m.FullName.Value == message.FullName.Value && m.PhoneNumber.Value == message.PhoneNumber.Value));
 
             await _eventProcessor.Received().ProcessAsync(Arg.Is<IEnumerable<IDomainEvent>>(e
@@ -80,7 +81,7 @@ namespace Lapka.Communication.Unit.Tests.Application.Handlers.HelpShelterMessage
                 message.ShelterId, helpType, message.Description.Value, message.FullName.Value,
                 message.PhoneNumber.Value);
 
-            _grpcIdentityService.DoesShelterExists(message.ShelterId).Returns(false);
+            _shelterRepository.GetAsync(message.ShelterId).Returns((Shelter) null);
 
             Exception exception = await Record.ExceptionAsync(async () => await Act(command));
 

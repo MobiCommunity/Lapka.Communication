@@ -25,7 +25,7 @@ namespace Lapka.Communication.Unit.Tests.Application.Handlers.StrayPetMessageTes
     public class CreateStrayPetMessageTests
     {
         private readonly IEventProcessor _eventProcessor;
-        private readonly IGrpcIdentityService _grpcIdentityService;
+        private readonly IShelterRepository _shelterRepository;
         private readonly CreateStrayPetMessageHandler _handler;
         private readonly IShelterMessageRepository _repository;
         private readonly IGrpcPhotoService _grpcPhotoService;
@@ -34,12 +34,12 @@ namespace Lapka.Communication.Unit.Tests.Application.Handlers.StrayPetMessageTes
         public CreateStrayPetMessageTests()
         {
             _grpcPhotoService = Substitute.For<IGrpcPhotoService>();
-            _grpcIdentityService = Substitute.For<IGrpcIdentityService>();
+            _shelterRepository = Substitute.For<IShelterRepository>();
             _eventProcessor = Substitute.For<IEventProcessor>();
             _repository = Substitute.For<IShelterMessageRepository>();
             _shelterMessageFactory = Substitute.For<IShelterMessageFactory>();
-            _handler = new CreateStrayPetMessageHandler(_eventProcessor, _grpcIdentityService, _grpcPhotoService,
-                _repository, _shelterMessageFactory);
+            _handler = new CreateStrayPetMessageHandler(_eventProcessor, _grpcPhotoService, _repository,
+                _shelterMessageFactory, _shelterRepository);
         }
 
         private Task Act(CreateStrayPetMessage command)
@@ -57,13 +57,16 @@ namespace Lapka.Communication.Unit.Tests.Application.Handlers.StrayPetMessageTes
                 Extensions.ArrangePhotoFile()
             };
             ShelterMessage message = Extensions.ArrangeShelterMessage();
+            Shelter shelter = new Shelter(message.ShelterId, new Location("33", "44"));
 
             CreateStrayPetMessage command = new CreateStrayPetMessage(message.Id.Value, message.UserId,
                 location, photos, message.Description.Value, message.FullName.Value, message.PhoneNumber.Value);
 
-            _grpcIdentityService.ClosestShelterAsync(command.Location.Longitude.Value, command.Location.Latitude.Value)
-                .Returns(message.ShelterId);
-            _shelterMessageFactory.CreateStrayPetMessage(command, message.ShelterId).Returns(message);
+            _shelterRepository.GetAllAsync().Returns(new List<Shelter>
+            {
+                shelter
+            });
+            _shelterMessageFactory.CreateFromStrayPetMessage(command, message.ShelterId).Returns(message);
 
             await Act(command);
 
@@ -91,11 +94,10 @@ namespace Lapka.Communication.Unit.Tests.Application.Handlers.StrayPetMessageTes
             CreateStrayPetMessage command = new CreateStrayPetMessage(message.Id.Value, message.UserId,
                 location, photos, message.Description.Value, message.FullName.Value, message.PhoneNumber.Value);
 
-            _grpcIdentityService.ClosestShelterAsync(command.Location.Longitude.Value, command.Location.Latitude.Value)
-                .Returns(Guid.Empty);
+            _shelterRepository.GetAllAsync().Returns(new List<Shelter>());
 
             Exception exception = await Record.ExceptionAsync(async () => await Act(command));
-            
+
             exception.ShouldNotBeNull();
             exception.ShouldBeOfType<ErrorDuringFindingClosestShelterException>();
         }

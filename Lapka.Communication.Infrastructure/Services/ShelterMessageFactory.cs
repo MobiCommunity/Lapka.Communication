@@ -9,7 +9,7 @@ namespace Lapka.Communication.Infrastructure.Services
 {
     public class ShelterMessageFactory : IShelterMessageFactory
     {
-        public ShelterMessage CreateAdoptPetMessage(CreateAdoptPetMessage message, Guid shelterId)
+        public ShelterMessage CreateFromAdoptPetMessage(CreateAdoptPetMessage message, Guid shelterId)
         {
             StringBuilder msgDescription = new StringBuilder();
             msgDescription.Append($"Użytkownik {message.FullName} chce zaadoptować zwierzaka {message.PetId}. ");
@@ -23,7 +23,7 @@ namespace Lapka.Communication.Infrastructure.Services
             return shelterMessage;
         }
 
-        public ShelterMessage CreateHelpShelterMessage(CreateHelpShelterMessage message)
+        public ShelterMessage CreateFromHelpShelterMessage(CreateHelpShelterMessage message)
         {
             StringBuilder msgDescription = new StringBuilder();
             msgDescription.Append($"Użytkownik {message.FullName} chce pomóc schronisku. ");
@@ -37,7 +37,7 @@ namespace Lapka.Communication.Infrastructure.Services
             return shelterMessage;
         }
 
-        public ShelterMessage CreateStrayPetMessage(CreateStrayPetMessage message, Guid shelterId)
+        public ShelterMessage CreateFromStrayPetMessage(CreateStrayPetMessage message, Guid shelterId)
         {
             StringBuilder msgDescription = new StringBuilder();
             msgDescription.Append($"Użytkownik {message.ReporterName} chce zgłasza błakającego sie zwierzaka. ");

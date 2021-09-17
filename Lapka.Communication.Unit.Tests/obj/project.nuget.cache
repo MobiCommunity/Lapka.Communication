@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "ToXW0KsEiXz9s5XWQnYJOY7UTbRQFSWCrtiVEUYi7dkUwPiCDCQpz2SIescx4SSqnFSjKoXdh4PMRX0Nx2QluA==",
+  "dgSpecHash": "rn7435+L2jkRmhVmX9lGFhzEl3G694G0MoPB2bJXD5S1HRfV83X/tatIGFfqWeoxlMiuFHsun6Gg8/+eRW15SA==",
   "success": true,
   "projectFilePath": "G:\\RiderProjects\\Lapka.Communication\\Lapka.Communication.Unit.Tests\\Lapka.Communication.Unit.Tests.csproj",
   "expectedPackageFiles": [
@@ -65,6 +65,7 @@
     "C:\\Users\\wardl\\.nuget\\packages\\elasticsearch.net\\7.14.1\\elasticsearch.net.7.14.1.nupkg.sha512",
     "C:\\Users\\wardl\\.nuget\\packages\\emptyfiles\\2.3.3\\emptyfiles.2.3.3.nupkg.sha512",
     "C:\\Users\\wardl\\.nuget\\packages\\figgle\\0.4.0\\figgle.0.4.0.nupkg.sha512",
+    "C:\\Users\\wardl\\.nuget\\packages\\geocoordinate.netcore\\1.0.0.1\\geocoordinate.netcore.1.0.0.1.nupkg.sha512",
     "C:\\Users\\wardl\\.nuget\\packages\\google.protobuf\\3.15.8\\google.protobuf.3.15.8.nupkg.sha512",
     "C:\\Users\\wardl\\.nuget\\packages\\grpc.aspnetcore\\2.39.0\\grpc.aspnetcore.2.39.0.nupkg.sha512",
     "C:\\Users\\wardl\\.nuget\\packages\\grpc.aspnetcore.server\\2.39.0\\grpc.aspnetcore.server.2.39.0.nupkg.sha512",

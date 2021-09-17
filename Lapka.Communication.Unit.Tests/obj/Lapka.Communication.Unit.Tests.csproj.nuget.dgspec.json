@@ -169,6 +169,14 @@
             "Convey.CQRS.Queries": {
               "target": "Package",
               "version": "[0.4.360, )"
+            },
+            "Convey.MessageBrokers": {
+              "target": "Package",
+              "version": "[0.4.360, )"
+            },
+            "GeoCoordinate.NetCore": {
+              "target": "Package",
+              "version": "[1.0.0.1, )"
             }
           },
           "imports": [

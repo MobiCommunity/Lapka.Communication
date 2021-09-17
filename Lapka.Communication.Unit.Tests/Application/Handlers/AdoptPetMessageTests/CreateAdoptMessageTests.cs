@@ -57,7 +57,7 @@ namespace Lapka.Communication.Unit.Tests.Application.Handlers.AdoptPetMessageTes
                 message.Description.Value, message.FullName.Value, message.PhoneNumber.Value);
 
             _grpcPetService.GetShelterIdAsync(petId).Returns(shelterId);
-            _shelterMessageFactory.CreateAdoptPetMessage(command, shelterId).Returns(message);
+            _shelterMessageFactory.CreateFromAdoptPetMessage(command, shelterId).Returns(message);
 
             await Act(command);
 

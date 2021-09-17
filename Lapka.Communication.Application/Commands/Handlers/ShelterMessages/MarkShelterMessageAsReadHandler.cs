@@ -1,9 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Convey.CQRS.Commands;
 using Lapka.Communication.Application.Commands.ShelterMessages;
 using Lapka.Communication.Application.Exceptions;
 using Lapka.Communication.Application.Services;
-using Lapka.Communication.Application.Services.Grpc;
 using Lapka.Communication.Application.Services.Repositories;
 using Lapka.Communication.Core.Entities;
 
@@ -13,14 +13,14 @@ namespace Lapka.Communication.Application.Commands.Handlers.ShelterMessages
     {
         private readonly IEventProcessor _eventProcessor;
         private readonly IShelterMessageRepository _repository;
-        private readonly IGrpcIdentityService _grpcIdentityService;
+        private readonly IShelterRepository _shelterRepository;
 
         public MarkShelterMessageAsReadHandler(IEventProcessor eventProcessor, IShelterMessageRepository repository,
-            IGrpcIdentityService grpcIdentityService)
+            IShelterRepository shelterRepository)
         {
             _eventProcessor = eventProcessor;
             _repository = repository;
-            _grpcIdentityService = grpcIdentityService;
+            _shelterRepository = shelterRepository;
         }
 
         public async Task HandleAsync(MarkShelterMessageAsRead command)
@@ -36,8 +36,8 @@ namespace Lapka.Communication.Application.Commands.Handlers.ShelterMessages
 
         private async Task ValidIfUserIsOwnerOfShelter(MarkShelterMessageAsRead command, ShelterMessage message)
         {
-            bool isUserOwner = await _grpcIdentityService.IsUserOwnerOfShelterAsync(message.ShelterId, command.UserId);
-            if (!isUserOwner)
+            Shelter shelter = await _shelterRepository.GetAsync(message.ShelterId);
+            if (shelter.Owners.Any(x => x != command.UserId))
             {
                 throw new UserNotOwnerOfShelterException(message.ShelterId, command.UserId);
             }
