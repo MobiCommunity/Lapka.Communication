@@ -16,11 +16,5 @@ namespace Lapka.Communication.Application.Dto
             GeoCoordinate pin2 = new GeoCoordinate(destinationLocation.Latitude.AsDouble(), destinationLocation.Longitude.AsDouble());
             return pin1.GetDistanceTo(pin2);
         }
-        public static List<Guid> IdsAsGuidList(this List<PhotoFile> photos)
-        {
-            List<Guid> guids = new List<Guid>();
-            photos.ForEach((p) => guids.Add(p.Id));
-            return guids;
-        }
     }
 }

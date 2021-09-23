@@ -11,6 +11,7 @@ using System;
 using System.Threading.Tasks;
 using Convey.Auth;
 using Convey.MessageBrokers.CQRS;
+using Convey.MessageBrokers.Outbox;
 using Convey.Persistence.MongoDB;
 using Lapka.Communication.Application.Events.Abstract;
 using Lapka.Communication.Application.Events.External;
@@ -52,9 +53,9 @@ namespace Lapka.Communication.Infrastructure
                 .AddMongoRepository<UserConversationDocument, Guid>("usersconversations")
                 .AddJwt()
                 .AddRabbitMq()
+                .AddMessageOutbox()
                 // .AddConsul()
                 // .AddFabio()
-                // .AddMessageOutbox()
                 // .AddMetrics()
                 ;
             
@@ -119,11 +120,12 @@ namespace Lapka.Communication.Infrastructure
             });
             
             services.AddHostedService<ElasticSearchSeeder>();
-
-
+            
             builder.Services.Scan(s => s.FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())
                 .AddClasses(c => c.AssignableTo(typeof(IDomainEventHandler<>)))
                 .AsImplementedInterfaces().WithTransientLifetime());
+
+            builder.Build();
             
             return builder;
         }
@@ -136,6 +138,9 @@ namespace Lapka.Communication.Infrastructure
                 .UseAuthentication()
                 .UseRabbitMq()
                 .SubscribeEvent<ShelterAdded>()
+                .SubscribeEvent<ShelterRemoved>()
+                .SubscribeEvent<ShelterOwnerAssigned>()
+                .SubscribeEvent<ShelterOwnerUnassigned>()
                 //.UseMetrics()
                 ;
 

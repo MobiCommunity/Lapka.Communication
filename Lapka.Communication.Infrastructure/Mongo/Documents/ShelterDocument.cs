@@ -8,6 +8,6 @@ namespace Lapka.Communication.Infrastructure.Mongo.Documents
     {
         public Guid Id { get; set; }
         public LocationDocument Location { get; set; }
-        public List<Guid> Owners { get; set; }
+        public IEnumerable<Guid> Owners { get; set; }
     }
 }

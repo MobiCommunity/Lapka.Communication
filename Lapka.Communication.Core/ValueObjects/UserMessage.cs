@@ -1,8 +1,6 @@
 ﻿using System;
-using System.IO;
-using Lapka.Communication.Core.Events.Concrete;
 
-namespace Lapka.Communication.Core.Entities
+namespace Lapka.Communication.Core.ValueObjects
 {
     public class UserMessage
     {

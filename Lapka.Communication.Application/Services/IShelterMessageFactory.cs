@@ -14,6 +14,8 @@ namespace Lapka.Communication.Application.Services
     {
         ShelterMessage CreateFromAdoptPetMessage(CreateAdoptPetMessage message, Guid shelterId);
         ShelterMessage CreateFromHelpShelterMessage(CreateHelpShelterMessage message);
-        ShelterMessage CreateFromStrayPetMessage(CreateStrayPetMessage message, Guid shelterId);
+
+        ShelterMessage CreateFromStrayPetMessage(CreateStrayPetMessage message, Guid shelterId,
+            IEnumerable<string> photoPaths);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Convey.CQRS.Commands;
@@ -38,9 +39,9 @@ namespace Lapka.Communication.Application.Commands.Handlers.ShelterMessages
         {
             Guid shelterId = await GetClosestShelterIdAsync(command);
 
-            ShelterMessage message = _messageFactory.CreateFromStrayPetMessage(command, shelterId);
-
-            await AddPhotosAsync(command);
+            IEnumerable<string> paths = await AddPhotosToMinioAsync(command);
+            
+            ShelterMessage message = _messageFactory.CreateFromStrayPetMessage(command, shelterId, paths);
 
             await _repository.AddAsync(message);
             await _eventProcessor.ProcessAsync(message.Events);
@@ -62,19 +63,24 @@ namespace Lapka.Communication.Application.Commands.Handlers.ShelterMessages
             return shelter.Id.Value;
         }
 
-        private async Task AddPhotosAsync(CreateStrayPetMessage command)
+        private async Task<IEnumerable<string>> AddPhotosToMinioAsync(CreateStrayPetMessage command)
         {
+            Collection<string> paths = new Collection<string>();
+
             try
             {
-                foreach (PhotoFile photo in command.Photos)
+                foreach (File photo in command.Photos)
                 {
-                    await _photoService.AddAsync(photo.Id, photo.Name, photo.Content, BucketName.PetPhotos);
+                    paths.Add(await _photoService.AddAsync(photo.Name, command.UserId, true, photo.Content,
+                        BucketName.PetPhotos));
                 }
             }
             catch (Exception ex)
             {
                 throw new CannotRequestFilesMicroserviceException(ex);
             }
+
+            return paths;
         }
     }
 }

@@ -43,5 +43,10 @@ namespace Lapka.Communication.Infrastructure.Mongo.Repositories
             await _repository.UpdateAsync(shelter.AsDocument());
             
         }
+
+        public async Task DeleteAsync(Shelter shelter)
+        {
+            await _repository.DeleteAsync(shelter.Id.Value);
+        }
     }
 }

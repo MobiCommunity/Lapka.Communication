@@ -11,12 +11,12 @@ namespace Lapka.Communication.Application.Commands.ShelterMessages
         public Guid Id { get; }
         public Guid UserId { get; }
         public Location Location { get; }
-        public List<PhotoFile> Photos { get; }
+        public List<File> Photos { get; }
         public string Description { get; }
         public string ReporterName { get; }
         public string ReporterPhoneNumber { get; }
 
-        public CreateStrayPetMessage(Guid id, Guid userId, Location location, List<PhotoFile> photos,
+        public CreateStrayPetMessage(Guid id, Guid userId, Location location, List<File> photos,
             string description, string reporterName, string reporterPhoneNumber)
         {
             Id = id;

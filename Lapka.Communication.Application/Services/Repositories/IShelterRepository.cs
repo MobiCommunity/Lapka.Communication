@@ -11,5 +11,6 @@ namespace Lapka.Communication.Application.Services.Repositories
         public Task<IEnumerable<Shelter>> GetAllAsync();
         public Task CreateAsync(Shelter shelter);
         public Task UpdateAsync(Shelter shelter);
+        public Task DeleteAsync(Shelter shelter);
     }
 }

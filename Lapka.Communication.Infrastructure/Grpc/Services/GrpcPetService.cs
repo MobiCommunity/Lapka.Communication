@@ -24,7 +24,6 @@ namespace Lapka.Communication.Infrastructure.Grpc.Services
             Guid shelterId = GetShelterIdAsGuid(petId, response.ShelterId);
 
             return shelterId;
-            
         }
 
         private static Guid GetShelterIdAsGuid(Guid petId, string unconvertedShelterId)

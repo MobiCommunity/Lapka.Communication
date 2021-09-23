@@ -12,16 +12,16 @@ namespace Lapka.Communication.Api.Models
         public static Location AsValueObject(this LocationModel location) =>
             new Location(location.Latitude, location.Longitude);
         
-        public static PhotoFile AsPhotoFile(this IFormFile file, Guid id) =>
-            new PhotoFile(id, file.FileName, file.OpenReadStream(), file.ContentType);
+        public static File AsPhotoFile(this IFormFile file) =>
+            new File(file.FileName, file.OpenReadStream(), file.ContentType);
         
-        public static List<PhotoFile> CreatePhotoFiles(this List<IFormFile> photos)
+        public static List<File> CreatePhotoFiles(this List<IFormFile> photos)
         {
-            List<PhotoFile> photoFiles = new List<PhotoFile>();
+            List<File> photoFiles = new List<File>();
 
             if (photos == null) return photoFiles;
 
-            photoFiles.AddRange(photos.Select(photo => photo.AsPhotoFile(Guid.NewGuid())));
+            photoFiles.AddRange(photos.Select(photo => photo.AsPhotoFile()));
 
             return photoFiles;
         }
