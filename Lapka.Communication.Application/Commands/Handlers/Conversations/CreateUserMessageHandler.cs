@@ -6,6 +6,7 @@ using Lapka.Communication.Application.Commands.Conversations;
 using Lapka.Communication.Application.Services;
 using Lapka.Communication.Application.Services.Repositories;
 using Lapka.Communication.Core.Entities;
+using Lapka.Communication.Core.ValueObjects;
 
 namespace Lapka.Communication.Application.Commands.Handlers.Conversations
 {

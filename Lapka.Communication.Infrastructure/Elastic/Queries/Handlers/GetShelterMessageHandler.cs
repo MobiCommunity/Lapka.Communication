@@ -1,9 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Convey.CQRS.Queries;
 using Lapka.Communication.Application.Dto;
 using Lapka.Communication.Application.Exceptions;
 using Lapka.Communication.Application.Queries;
-using Lapka.Communication.Application.Services.Grpc;
+using Lapka.Communication.Application.Services.Repositories;
+using Lapka.Communication.Core.Entities;
 using Lapka.Communication.Infrastructure.Elastic.Options;
 using Lapka.Communication.Infrastructure.Mongo.Documents;
 using Nest;
@@ -14,14 +16,14 @@ namespace Lapka.Communication.Infrastructure.Elastic.Queries.Handlers
     {
         private readonly IElasticClient _elasticClient;
         private readonly ElasticSearchOptions _elasticSearchOptions;
-        private readonly IGrpcIdentityService _identityService;
+        private readonly IShelterRepository _shelterRepository;
 
         public GetShelterMessageHandler(IElasticClient elasticClient, ElasticSearchOptions elasticSearchOptions,
-            IGrpcIdentityService identityService)
+            IShelterRepository shelterRepository)
         {
             _elasticClient = elasticClient;
             _elasticSearchOptions = elasticSearchOptions;
-            _identityService = identityService;
+            _shelterRepository = shelterRepository;
         }
 
         public async Task<ShelterMessageDto> HandleAsync(GetShelterMessage query)
@@ -36,8 +38,8 @@ namespace Lapka.Communication.Infrastructure.Elastic.Queries.Handlers
         private async Task CheckIfUserIsAccessibleOfMessageAsync(GetShelterMessage query,
             ShelterMessageDocument message)
         {
-            bool isUserOwner = await _identityService.IsUserOwnerOfShelterAsync(message.ShelterId, query.UserId);
-            if (!isUserOwner && message.UserId != query.UserId)
+            Shelter shelter = await _shelterRepository.GetAsync(message.ShelterId);
+            if (shelter.Owners.Any(x => x != query.UserId) && message.UserId != query.UserId)
             {
                 throw new UserDoesNotOwnMessageException(query.MessageId, query.UserId);
             }

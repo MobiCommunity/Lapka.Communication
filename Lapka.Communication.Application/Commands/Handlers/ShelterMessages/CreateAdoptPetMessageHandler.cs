@@ -30,7 +30,7 @@ namespace Lapka.Communication.Application.Commands.Handlers.ShelterMessages
         {
             Guid shelterId = await GetShelterIdAsync(command);
 
-            ShelterMessage message = _messageFactory.CreateAdoptPetMessage(command, shelterId);
+            ShelterMessage message = _messageFactory.CreateFromAdoptPetMessage(command, shelterId);
 
             await _repository.AddAsync(message);
             await _eventProcessor.ProcessAsync(message.Events);

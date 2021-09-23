@@ -35,17 +35,5 @@ namespace Lapka.Communication.Infrastructure.Elastic.Services
                                  $" shelter message {response.ServerError.Error.Headers.Values.FirstOrDefault()}");
             }
         }
-
-        public async Task DeleteDataAsync(ShelterMessage message)
-        {
-            DeleteResponse response = await _elasticClient.DeleteAsync<ShelterMessage>(message.Id.Value,
-                x => x.Index(_elasticSearchOptions.Aliases.ShelterMessages));
-
-            if (!response.IsValid)
-            {
-                _logger.LogError("Error occured when trying to delete" +
-                                 $" shelter message {response.ServerError.Error.Headers.Values.FirstOrDefault()}");
-            }
-        }
     }
 }

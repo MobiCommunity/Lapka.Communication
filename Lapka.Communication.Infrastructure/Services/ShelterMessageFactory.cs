@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using Lapka.Communication.Application.Commands;
 using Lapka.Communication.Application.Commands.ShelterMessages;
@@ -9,7 +10,7 @@ namespace Lapka.Communication.Infrastructure.Services
 {
     public class ShelterMessageFactory : IShelterMessageFactory
     {
-        public ShelterMessage CreateAdoptPetMessage(CreateAdoptPetMessage message, Guid shelterId)
+        public ShelterMessage CreateFromAdoptPetMessage(CreateAdoptPetMessage message, Guid shelterId)
         {
             StringBuilder msgDescription = new StringBuilder();
             msgDescription.Append($"Użytkownik {message.FullName} chce zaadoptować zwierzaka {message.PetId}. ");
@@ -23,7 +24,7 @@ namespace Lapka.Communication.Infrastructure.Services
             return shelterMessage;
         }
 
-        public ShelterMessage CreateHelpShelterMessage(CreateHelpShelterMessage message)
+        public ShelterMessage CreateFromHelpShelterMessage(CreateHelpShelterMessage message)
         {
             StringBuilder msgDescription = new StringBuilder();
             msgDescription.Append($"Użytkownik {message.FullName} chce pomóc schronisku. ");
@@ -37,13 +38,19 @@ namespace Lapka.Communication.Infrastructure.Services
             return shelterMessage;
         }
 
-        public ShelterMessage CreateStrayPetMessage(CreateStrayPetMessage message, Guid shelterId)
+        public ShelterMessage CreateFromStrayPetMessage(CreateStrayPetMessage message, Guid shelterId,
+            IEnumerable<string> photoPath)
         {
             StringBuilder msgDescription = new StringBuilder();
-            msgDescription.Append($"Użytkownik {message.ReporterName} chce zgłasza błakającego sie zwierzaka. ");
+            msgDescription.Append($"Użytkownik {message.ReporterName} zgłasza błakającego sie zwierzaka. ");
             msgDescription.Append(
                 $"Z użytkownikiem można się skontakować dzwoniąc pod: {message.ReporterPhoneNumber}. ");
-            msgDescription.Append($"Użytkownik do zgłoszenia dołaczył wiadomość o treści: {message.Description}");
+            msgDescription.Append($"Użytkownik do zgłoszenia dołaczył wiadomość o treści: {message.Description}. ");
+            msgDescription.Append($"Oraz dołaczył zdjęcia: ");
+            foreach (string photo in photoPath)
+            {
+                msgDescription.Append($"[{photo}] ");
+            }
 
             ShelterMessage shelterMessage = ShelterMessage.Create(message.Id, message.UserId, shelterId, false,
                 "Błąkający się zwierzak", msgDescription.ToString(), message.ReporterName, message.ReporterPhoneNumber,

@@ -17,22 +17,26 @@ namespace Lapka.Communication.Infrastructure.Grpc.Services
             _client = client;
         }
         
-        public async Task AddAsync(Guid id, string name, Stream photo, BucketName bucket)
+        public async Task<string> AddAsync(string name, Guid userId, bool isPublic, Stream photo, BucketName bucket)
         {
-            await _client.UploadPhotoAsync(new UploadPhotoRequest
+            UploadPhotoReply response = await _client.UploadPhotoAsync(new UploadPhotoRequest
             {
-                Id = id.ToString(),
+                IsPublic = isPublic,
                 Name = name,
+                UserId = userId.ToString(),
                 Photo = await ByteString.FromStreamAsync(photo),
                 BucketName = bucket.AsGrpcUpload()
             });
+
+            return response.Path;
         }
 
-        public async Task DeleteAsync(Guid photoId, BucketName bucket)
+        public async Task DeleteAsync(string photoPath, Guid userId, BucketName bucket)
         {
             await _client.DeletePhotoAsync(new DeletePhotoRequest
             {
-                Id = photoId.ToString(),
+                Id = photoPath,
+                UserId = userId.ToString(),
                 BucketName = bucket.AsGrpcDelete()
             });
         }

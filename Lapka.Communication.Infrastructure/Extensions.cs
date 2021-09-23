@@ -10,8 +10,11 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
 using Convey.Auth;
+using Convey.MessageBrokers.CQRS;
+using Convey.MessageBrokers.Outbox;
 using Convey.Persistence.MongoDB;
 using Lapka.Communication.Application.Events.Abstract;
+using Lapka.Communication.Application.Events.External;
 using Lapka.Communication.Application.Services;
 using Lapka.Communication.Application.Services.Elastic;
 using Lapka.Communication.Application.Services.Grpc;
@@ -45,13 +48,14 @@ namespace Lapka.Communication.Infrastructure
                 .AddErrorHandler<ExceptionToResponseMapper>()
                 .AddExceptionToMessageMapper<ExceptionToMessageMapper>()
                 .AddMongo()
+                .AddMongoRepository<ShelterDocument, Guid>("shelter")
                 .AddMongoRepository<ShelterMessageDocument, Guid>("sheltermessage")
                 .AddMongoRepository<UserConversationDocument, Guid>("usersconversations")
                 .AddJwt()
-                // .AddRabbitMq()
+                .AddRabbitMq()
+                .AddMessageOutbox()
                 // .AddConsul()
                 // .AddFabio()
-                // .AddMessageOutbox()
                 // .AddMetrics()
                 ;
             
@@ -88,7 +92,8 @@ namespace Lapka.Communication.Infrastructure
             services.AddSingleton<IDomainToIntegrationEventMapper, DomainToIntegrationEventMapper>();
             services.AddSingleton<IElasticClient>(new ElasticClient(elasticConnectionSettings));
 
-            services.AddTransient<IGrpcIdentityService, GrpcIdentityService>();
+            services.AddTransient<IShelterRepository, ShelterRepository>();
+            services.AddTransient<IGrpcShelterService, GrpcShelterService>();
             services.AddTransient<IGrpcPhotoService, GrpcPhotoService>();
             services.AddTransient<IGrpcPetService, GrpcPetService>();
             services.AddTransient<IShelterMessageRepository, ShelterMessageRepository>();
@@ -97,14 +102,14 @@ namespace Lapka.Communication.Infrastructure
             services.AddTransient<IShelterMessageElasticsearchUpdater, ShelterMessageElasticsearchUpdater>();
             services.AddTransient<IUserConversationElasticsearchUpdater, UserConversationElasticsearchUpdater>();
             services.AddTransient<IEventProcessor, EventProcessor>();
-            services.AddTransient<IMessageBroker, DummyMessageBroker>();
+            services.AddTransient<IMessageBroker, MessageBroker>();
             
             services.AddGrpcClient<PhotoProto.PhotoProtoClient>(o =>
             {
                 o.Address = new Uri(filesMicroserviceOptions.UrlHttp2);
             });
             
-            services.AddGrpcClient<IdentityProto.IdentityProtoClient>(o =>
+            services.AddGrpcClient<ShelterProto.ShelterProtoClient>(o =>
             {
                 o.Address = new Uri(identityMicroserviceOptions.UrlHttp2);
             });
@@ -115,11 +120,12 @@ namespace Lapka.Communication.Infrastructure
             });
             
             services.AddHostedService<ElasticSearchSeeder>();
-
-
+            
             builder.Services.Scan(s => s.FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())
                 .AddClasses(c => c.AssignableTo(typeof(IDomainEventHandler<>)))
                 .AsImplementedInterfaces().WithTransientLifetime());
+
+            builder.Build();
             
             return builder;
         }
@@ -130,8 +136,12 @@ namespace Lapka.Communication.Infrastructure
                 .UseErrorHandler()
                 .UseConvey()
                 .UseAuthentication()
+                .UseRabbitMq()
+                .SubscribeEvent<ShelterAdded>()
+                .SubscribeEvent<ShelterRemoved>()
+                .SubscribeEvent<ShelterOwnerAssigned>()
+                .SubscribeEvent<ShelterOwnerUnassigned>()
                 //.UseMetrics()
-                //.UseRabbitMq()
                 ;
 
 

@@ -3,6 +3,7 @@ using System.IO;
 using Lapka.Communication.Core.Entities;
 using Lapka.Communication.Core.ValueObjects;
 using Lapka.Communication.Core.ValueObjects.Locations;
+using File = Lapka.Communication.Core.ValueObjects.File;
 
 namespace Lapka.Communication.Unit.Tests
 {
@@ -37,15 +38,13 @@ namespace Lapka.Communication.Unit.Tests
             return location;
         }
 
-        public static PhotoFile ArrangePhotoFile(Guid? id = null, string name = null, Stream stream = null,
-            string contentType = null)
+        public static File ArrangePhotoFile(string name = null, Stream stream = null, string contentType = null)
         {
-            Guid validId = id ?? Guid.NewGuid();
             string validName = name ?? $"{Guid.NewGuid()}.jpg";
             Stream validStream = stream ?? new MemoryStream();
             string validContentType = contentType ?? "image/jpg";
 
-            PhotoFile file = new PhotoFile(validId, validName, validStream, validContentType);
+            File file = new File(validName, validStream, validContentType);
 
             return file;
         }

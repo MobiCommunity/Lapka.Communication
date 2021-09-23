@@ -4,6 +4,7 @@ using Lapka.Communication.Application.Dto;
 using Lapka.Communication.Core.Entities;
 using Lapka.Communication.Core.Exceptions;
 using Lapka.Communication.Core.ValueObjects;
+using Lapka.Communication.Core.ValueObjects.Locations;
 
 namespace Lapka.Communication.Infrastructure.Mongo.Documents
 {
@@ -14,6 +15,35 @@ namespace Lapka.Communication.Infrastructure.Mongo.Documents
             return new ShelterMessage(message.Id, message.UserId, message.ShelterId, message.IsRead, message.Title,
                 new MessageDescription(message.Description), new FullName(message.FullName),
                 new PhoneNumber(message.PhoneNumber), message.CreatedAt);
+        }
+
+        public static ShelterDocument AsDocument(this Shelter shelter)
+        {
+            return new ShelterDocument
+            {
+                Id = shelter.Id.Value,
+                Location = shelter.Location.AsDocument(),
+                Owners = shelter.Owners
+            };
+        }
+
+        public static LocationDocument AsDocument(this Location location)
+        {
+            return new LocationDocument
+            {
+                Longitude = location.Longitude.AsDouble(),
+                Latitude = location.Latitude.AsDouble()
+            };
+        }
+        
+        public static Location AsBusiness(this LocationDocument location)
+        {
+            return new Location(location.Latitude.ToString(), location.Longitude.ToString());
+        }
+        
+        public static Shelter AsBusiness(this ShelterDocument shelter)
+        {
+            return new Shelter(shelter.Id, shelter.Location.AsBusiness(), shelter.Owners);
         }
 
         public static ShelterMessageDocument AsDocument(this ShelterMessage message)

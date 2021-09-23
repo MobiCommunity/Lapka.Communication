@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Lapka.Communication.Application.Commands;
@@ -19,13 +21,14 @@ using Lapka.Communication.Core.ValueObjects.Locations;
 using NSubstitute;
 using Shouldly;
 using Xunit;
+using File = Lapka.Communication.Core.ValueObjects.File;
 
 namespace Lapka.Communication.Unit.Tests.Application.Handlers.StrayPetMessageTests
 {
     public class CreateStrayPetMessageTests
     {
         private readonly IEventProcessor _eventProcessor;
-        private readonly IGrpcIdentityService _grpcIdentityService;
+        private readonly IShelterRepository _shelterRepository;
         private readonly CreateStrayPetMessageHandler _handler;
         private readonly IShelterMessageRepository _repository;
         private readonly IGrpcPhotoService _grpcPhotoService;
@@ -34,12 +37,12 @@ namespace Lapka.Communication.Unit.Tests.Application.Handlers.StrayPetMessageTes
         public CreateStrayPetMessageTests()
         {
             _grpcPhotoService = Substitute.For<IGrpcPhotoService>();
-            _grpcIdentityService = Substitute.For<IGrpcIdentityService>();
+            _shelterRepository = Substitute.For<IShelterRepository>();
             _eventProcessor = Substitute.For<IEventProcessor>();
             _repository = Substitute.For<IShelterMessageRepository>();
             _shelterMessageFactory = Substitute.For<IShelterMessageFactory>();
-            _handler = new CreateStrayPetMessageHandler(_eventProcessor, _grpcIdentityService, _grpcPhotoService,
-                _repository, _shelterMessageFactory);
+            _handler = new CreateStrayPetMessageHandler(_eventProcessor, _grpcPhotoService, _repository,
+                _shelterMessageFactory, _shelterRepository);
         }
 
         private Task Act(CreateStrayPetMessage command)
@@ -51,19 +54,33 @@ namespace Lapka.Communication.Unit.Tests.Application.Handlers.StrayPetMessageTes
         public async void given_valid_stray_pet_message_should_be_created()
         {
             Location location = Extensions.ArrangeLocation();
-            List<PhotoFile> photos = new List<PhotoFile>
+            List<File> photos = new List<File>
             {
                 Extensions.ArrangePhotoFile(),
                 Extensions.ArrangePhotoFile()
             };
+            ICollection<string> paths = new Collection<string>();
+
             ShelterMessage message = Extensions.ArrangeShelterMessage();
+            Shelter shelter = new Shelter(message.ShelterId, new Location("33", "44"));
 
             CreateStrayPetMessage command = new CreateStrayPetMessage(message.Id.Value, message.UserId,
                 location, photos, message.Description.Value, message.FullName.Value, message.PhoneNumber.Value);
 
-            _grpcIdentityService.ClosestShelterAsync(command.Location.Longitude.Value, command.Location.Latitude.Value)
-                .Returns(message.ShelterId);
-            _shelterMessageFactory.CreateStrayPetMessage(command, message.ShelterId).Returns(message);
+            foreach (File photo in photos)
+            {
+                _grpcPhotoService.AddAsync(Arg.Is(photo.Name), Arg.Is(command.UserId),
+                    Arg.Is(true), Arg.Is(photo.Content), Arg.Is(BucketName.PetPhotos)).Returns(photo.Name);
+                paths.Add(photo.Name);
+            }
+
+            _shelterRepository.GetAllAsync().Returns(new List<Shelter>
+            {
+                shelter
+            });
+
+            _shelterMessageFactory.CreateFromStrayPetMessage(command, message.ShelterId, Arg.Any<ICollection<string>>())
+                .Returns(message);
 
             await Act(command);
 
@@ -81,7 +98,7 @@ namespace Lapka.Communication.Unit.Tests.Application.Handlers.StrayPetMessageTes
         public async void given_valid_stray_pet_message_but_did_not_found_closest_shelter_should_throw_an_exception()
         {
             Location location = Extensions.ArrangeLocation();
-            List<PhotoFile> photos = new List<PhotoFile>
+            List<File> photos = new List<File>
             {
                 Extensions.ArrangePhotoFile(),
                 Extensions.ArrangePhotoFile()
@@ -91,11 +108,10 @@ namespace Lapka.Communication.Unit.Tests.Application.Handlers.StrayPetMessageTes
             CreateStrayPetMessage command = new CreateStrayPetMessage(message.Id.Value, message.UserId,
                 location, photos, message.Description.Value, message.FullName.Value, message.PhoneNumber.Value);
 
-            _grpcIdentityService.ClosestShelterAsync(command.Location.Longitude.Value, command.Location.Latitude.Value)
-                .Returns(Guid.Empty);
+            _shelterRepository.GetAllAsync().Returns(new List<Shelter>());
 
             Exception exception = await Record.ExceptionAsync(async () => await Act(command));
-            
+
             exception.ShouldNotBeNull();
             exception.ShouldBeOfType<ErrorDuringFindingClosestShelterException>();
         }
