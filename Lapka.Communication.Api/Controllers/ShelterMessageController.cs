@@ -180,5 +180,30 @@ namespace Lapka.Communication.Api.Controllers
 
             return NoContent();
         }
+        
+        /// <summary>
+        /// Gets shelter unread messages count. User has to be logged and owner of shelter.
+        /// </summary>
+        /// <returns>Count of unread messages</returns>
+        /// <response code="200">If unread messages count is successfully returned</response>
+        /// <response code="401">If user is not logged</response>
+        /// <response code="401">If user is not logged</response>
+        /// <response code="403">If user is not owner of shelter</response>
+        [ProducesResponseType(typeof(IEnumerable<long>), StatusCodes.Status200OK)]
+        [HttpGet("count/shelter/{id:guid}")]
+        public async Task<ActionResult<long>> GetUnreadMessagesCount(Guid id)
+        {
+            Guid userId = await HttpContext.AuthenticateUsingJwtGetUserIdAsync();
+            if (userId == Guid.Empty)
+            {
+                return Unauthorized();
+            }
+
+            return Ok(await _queryDispatcher.QueryAsync(new GetUnreadMessagesCount
+            {
+                ShelterId = id
+            }));
+            
+        }
     }
 }
