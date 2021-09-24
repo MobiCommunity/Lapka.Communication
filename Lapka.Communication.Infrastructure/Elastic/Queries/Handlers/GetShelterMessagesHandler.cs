@@ -59,7 +59,7 @@ namespace Lapka.Communication.Infrastructure.Elastic.Queries.Handlers
         private async Task CheckIfUserIsOwnerOfShelterAsync(GetShelterMessages query)
         {
             Shelter shelter = await _shelterRepository.GetAsync(query.ShelterId);
-            if (shelter.Owners.Any(x => x != query.UserId))
+            if (!shelter.Owners.Contains(query.UserId))
             {
                 throw new UserNotOwnerOfShelterException(query.ShelterId, query.UserId);
             }

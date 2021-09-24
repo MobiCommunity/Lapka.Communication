@@ -39,7 +39,7 @@ namespace Lapka.Communication.Infrastructure.Elastic.Queries.Handlers
             ShelterMessageDocument message)
         {
             Shelter shelter = await _shelterRepository.GetAsync(message.ShelterId);
-            if (shelter.Owners.Any(x => x != query.UserId) && message.UserId != query.UserId)
+            if (!shelter.Owners.Contains(query.UserId) && message.UserId != query.UserId)
             {
                 throw new UserDoesNotOwnMessageException(query.MessageId, query.UserId);
             }

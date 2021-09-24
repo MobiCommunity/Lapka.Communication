@@ -37,7 +37,7 @@ namespace Lapka.Communication.Application.Commands.Handlers.ShelterMessages
         private async Task ValidIfUserIsOwnerOfShelter(MarkShelterMessageAsRead command, ShelterMessage message)
         {
             Shelter shelter = await _shelterRepository.GetAsync(message.ShelterId);
-            if (shelter.Owners.Any(x => x != command.UserId))
+            if (!shelter.Owners.Contains(command.UserId))
             {
                 throw new UserNotOwnerOfShelterException(message.ShelterId, command.UserId);
             }
