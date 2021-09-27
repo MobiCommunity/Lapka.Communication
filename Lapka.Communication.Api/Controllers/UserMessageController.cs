@@ -30,11 +30,9 @@ namespace Lapka.Communication.Api.Controllers
         /// <summary>
         /// Gets all user messages from conversation. User has to be logged. 
         /// </summary>
-        /// <returns>Messages between users</returns>
-        /// <response code="200">If successfully got messages</response>
-        /// <response code="401">If user is not logged</response>
-        /// <response code="404">If conversation is not found</response>
         [ProducesResponseType(typeof(UserDetailedConversationDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status404NotFound)]
         [HttpGet("{id:guid}/user")]
         public async Task<IActionResult> GetUserConversationMessages(Guid id)
         {
@@ -54,10 +52,8 @@ namespace Lapka.Communication.Api.Controllers
         /// <summary>
         /// Gets all user conversations. User has to be logged. 
         /// </summary>
-        /// <returns>User conversations</returns>
-        /// <response code="200">If successfully got messages</response>
-        /// <response code="401">If user is not logged</response>
         [ProducesResponseType(typeof(IEnumerable<UserBasicConversationDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status401Unauthorized)]
         [HttpGet("user")]
         public async Task<IActionResult> GetUserConversations()
         {
@@ -77,11 +73,9 @@ namespace Lapka.Communication.Api.Controllers
         /// <summary>
         /// Sends message to other user. User has to be logged. 
         /// </summary>
-        /// <returns>No content</returns>
-        /// <response code="204">If successfully got sent message</response>
-        /// <response code="401">If user is not logged</response>
-        /// <response code="404">If user is not found</response>
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status404NotFound)]
         [HttpPost("user/{id:guid}")]
         public async Task<IActionResult> SendMessage(Guid id, CreateMessageRequest message)
         {
@@ -102,11 +96,9 @@ namespace Lapka.Communication.Api.Controllers
         /// <summary>
         /// Marks message as read. User has to be logged. 
         /// </summary>
-        /// <returns>No content</returns>
-        /// <response code="204">If successfully marked message</response>
-        /// <response code="401">If user is not logged</response>
-        /// <response code="404">If message is not found</response>
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status404NotFound)]
         [HttpPatch("{id:guid}")]
         public async Task<IActionResult> MarkAsReadMessages(Guid id)
         {
@@ -124,11 +116,9 @@ namespace Lapka.Communication.Api.Controllers
         /// <summary>
         /// Deletes conversation between users (with all messages). User has to be logged. 
         /// </summary>
-        /// <returns>No content</returns>
-        /// <response code="204">If successfully deleted conversation</response>
-        /// <response code="401">If user is not logged</response>
-        /// <response code="404">If conversation is not found</response>
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status404NotFound)]
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> SendMessage(Guid id)
         {

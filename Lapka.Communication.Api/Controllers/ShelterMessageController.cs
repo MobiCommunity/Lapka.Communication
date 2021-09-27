@@ -32,11 +32,9 @@ namespace Lapka.Communication.Api.Controllers
         /// Gets shelter message. Can be obtained by user who sent the message, and by the owner of the shelter, to which
         /// was message sent. User has to be logged.
         /// </summary>
-        /// <returns>Message</returns>
-        /// <response code="200">If successfully got message</response>
-        /// <response code="401">If user is not logged</response>
-        /// <response code="403">If user is not accessible to read this message</response>
         [ProducesResponseType(typeof(ShelterMessageDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status403Forbidden)]
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetMessage(Guid id)
         {
@@ -57,11 +55,9 @@ namespace Lapka.Communication.Api.Controllers
         /// Gets all shelter messages. Can be obtained only by owner of shelter to which messages messages was sent.
         /// User has to be logged.
         /// </summary>
-        /// <returns>Messages</returns>
-        /// <response code="200">If successfully got messages</response>
-        /// <response code="401">If user is not logged</response>
-        /// <response code="403">If user is not accessible to read shelter messages</response>
         [ProducesResponseType(typeof(IEnumerable<ShelterMessageDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status403Forbidden)]
         [HttpGet("shelter/{id:guid}")]
         public async Task<IActionResult> GetShelterMessages(Guid id)
         {
@@ -82,12 +78,10 @@ namespace Lapka.Communication.Api.Controllers
         /// Creates a help message to the shelter. By help means he offer for example walk with a pet.
         /// User has to be logged.
         /// </summary>
-        /// <returns>URL to the photo</returns>
-        /// <response code="201">If successfully created message</response>
-        /// <response code="400">If invalid properties were given</response>
-        /// <response code="401">If user is not logged</response>
-        /// <response code="403">If shelter is not found</response>
         [ProducesResponseType(typeof(string), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status403Forbidden)]
         [HttpPost("help")]
         public async Task<IActionResult> CreateHelpShelterMessage(CreateHelpShelterMessageRequest message)
         {
@@ -109,12 +103,10 @@ namespace Lapka.Communication.Api.Controllers
         /// Creates a stray message to the shelter. This type of message is for reporting stray pets.
         /// User has to be logged. 
         /// </summary>
-        /// <returns>URL to the photo</returns>
-        /// <response code="201">If successfully created message</response>
-        /// <response code="400">If invalid properties were given</response>
-        /// <response code="401">If user is not logged</response>
-        /// <response code="404">If shelter is not found</response>
         [ProducesResponseType(typeof(string), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status404NotFound)]
         [HttpPost("stray")]
         public async Task<IActionResult> CreateStrayPetMessage([FromForm] ReportStrayPetRequest request)
         {
@@ -136,12 +128,10 @@ namespace Lapka.Communication.Api.Controllers
         /// <summary>
         /// Creates message for adoption to the shelter. User has to be logged. 
         /// </summary>
-        /// <returns>URL to the photo</returns>
-        /// <response code="201">If successfully created message</response>
-        /// <response code="400">If invalid properties were given</response>
-        /// <response code="401">If user is not logged</response>
-        /// <response code="404">If shelter or pet is not found</response>
         [ProducesResponseType(typeof(string), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status404NotFound)]
         [HttpPost("adopt")]
         public async Task<IActionResult> CreateAdoptPetMessage(CreateAdoptPetMessageRequest message)
         {
@@ -162,11 +152,9 @@ namespace Lapka.Communication.Api.Controllers
         /// <summary>
         /// Marks message as read. User has to be logged. 
         /// </summary>
-        /// <returns>No content</returns>
-        /// <response code="204">If successfully marked message as read</response>
-        /// <response code="401">If user is not logged</response>
-        /// <response code="404">If message is not found</response>
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status404NotFound)]
         [HttpPatch("{id}/read")]
         public async Task<IActionResult> MarkAsReadMessage(Guid id)
         {
@@ -184,12 +172,10 @@ namespace Lapka.Communication.Api.Controllers
         /// <summary>
         /// Gets shelter unread messages count. User has to be logged and owner of shelter.
         /// </summary>
-        /// <returns>Count of unread messages</returns>
-        /// <response code="200">If unread messages count is successfully returned</response>
-        /// <response code="401">If user is not logged</response>
-        /// <response code="401">If user is not logged</response>
-        /// <response code="403">If user is not owner of shelter</response>
         [ProducesResponseType(typeof(IEnumerable<long>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status404NotFound)]
         [HttpGet("count/shelter/{id:guid}")]
         public async Task<ActionResult<long>> GetUnreadMessagesCount(Guid id)
         {
