@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Lapka.Communication.Api.Controllers
 {
     [ApiController]
-    [Route("api/message/conversation")]
+    [Route("api/communication/message/conversation")]
     public class UserMessageController : ControllerBase
     {
         private readonly ICommandDispatcher _commandDispatcher;

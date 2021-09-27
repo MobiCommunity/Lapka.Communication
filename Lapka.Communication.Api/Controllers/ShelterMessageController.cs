@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Lapka.Communication.Api.Controllers
 {
     [ApiController]
-    [Route("api/message")]
+    [Route("api/communication/message")]
     public class ShelterMessageController : ControllerBase
     {
         private readonly ICommandDispatcher _commandDispatcher;
