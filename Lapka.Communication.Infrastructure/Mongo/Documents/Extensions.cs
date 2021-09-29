@@ -72,7 +72,8 @@ namespace Lapka.Communication.Infrastructure.Mongo.Documents
                 Description = message.Description,
                 FullName = message.FullName,
                 PhoneNumber = message.PhoneNumber,
-                CreatedAt = message.CreatedAt
+                CreatedAt = message.CreatedAt,
+                IsRead = message.IsRead
             };
         }
 
