@@ -10,19 +10,21 @@ namespace Lapka.Communication.Unit.Tests
     public static class Extensions
     {
         public static ShelterMessage ArrangeShelterMessage(AggregateId id = null, Guid? userId = null,
-            Guid? shelterId = null, string title = null, string description = null, string fullName = null,
-            string phoneNumber = null)
+            Guid? shelterId = null, string title = null, MessageDescription description = null,
+            FullName fullName = null,
+            PhoneNumber phoneNumber = null)
         {
             AggregateId validId = id ?? new AggregateId();
             Guid validUserId = userId ?? Guid.NewGuid();
             Guid validShelterId = shelterId ?? Guid.NewGuid();
             string validTitle = title ?? "This is valid Title";
-            string validDescription = description ??
-                                      "I want to adopt this pet because this pet is the coolest pet i have ever seen.";
-            string validFullName = fullName ?? "Mikolaj mikołajczyk";
-            string validPhoneNumber = phoneNumber ?? "123123123";
+            MessageDescription validDescription = description ?? new MessageDescription(
+                "I want to adopt this pet because this pet is the coolest pet i have ever seen.");
+            FullName validFullName = fullName ?? new FullName("Mikolaj mikołajczyk");
+            PhoneNumber validPhoneNumber = phoneNumber ?? new PhoneNumber("123123123");
 
-            ShelterMessage message = ShelterMessage.Create(validId.Value, validUserId, validShelterId, false, validTitle,
+            ShelterMessage message = ShelterMessage.Create(validId.Value, validUserId, validShelterId, false,
+                validTitle,
                 validDescription, validFullName, validPhoneNumber, DateTime.UtcNow);
 
             return message;

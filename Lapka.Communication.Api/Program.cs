@@ -91,6 +91,8 @@ namespace Lapka.Communication.Api
                     services.BuildServiceProvider();
                 }).Configure(app =>
                 {
+                    app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+
                     app
                         .UseConvey()
                         .UseInfrastructure()

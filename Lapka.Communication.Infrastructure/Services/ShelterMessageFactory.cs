@@ -5,6 +5,7 @@ using Lapka.Communication.Application.Commands;
 using Lapka.Communication.Application.Commands.ShelterMessages;
 using Lapka.Communication.Application.Services;
 using Lapka.Communication.Core.Entities;
+using Lapka.Communication.Core.ValueObjects;
 
 namespace Lapka.Communication.Infrastructure.Services
 {
@@ -18,8 +19,8 @@ namespace Lapka.Communication.Infrastructure.Services
             msgDescription.Append($"Użytkownik do adopcji dołaczył wiadomość o treści: {message.Description}");
 
             ShelterMessage shelterMessage = ShelterMessage.Create(message.Id, message.UserId, shelterId, false,
-                "Adopcja zwierzaka", msgDescription.ToString(), message.FullName, message.PhoneNumber,
-                DateTime.UtcNow);
+                "Adopcja zwierzaka", new MessageDescription(msgDescription.ToString()), new FullName(message.FullName),
+                new PhoneNumber(message.PhoneNumber), DateTime.UtcNow);
 
             return shelterMessage;
         }
@@ -33,7 +34,8 @@ namespace Lapka.Communication.Infrastructure.Services
             msgDescription.Append($"Użytkownik do chęci pomocy dołaczył wiadomość o treści: {message.Description}");
 
             ShelterMessage shelterMessage = ShelterMessage.Create(message.Id, message.UserId, message.ShelterId, false,
-                "Adopcja zwierzaka", msgDescription.ToString(), message.FullName, message.PhoneNumber, DateTime.UtcNow);
+                "Adopcja zwierzaka", new MessageDescription(msgDescription.ToString()), new FullName(message.FullName),
+                new PhoneNumber(message.PhoneNumber), DateTime.UtcNow);
 
             return shelterMessage;
         }
@@ -53,8 +55,8 @@ namespace Lapka.Communication.Infrastructure.Services
             }
 
             ShelterMessage shelterMessage = ShelterMessage.Create(message.Id, message.UserId, shelterId, false,
-                "Błąkający się zwierzak", msgDescription.ToString(), message.ReporterName, message.ReporterPhoneNumber,
-                DateTime.UtcNow);
+                "Błąkający się zwierzak", new MessageDescription(msgDescription.ToString()),
+                new FullName(message.ReporterName), new PhoneNumber(message.ReporterPhoneNumber), DateTime.UtcNow);
 
             return shelterMessage;
         }

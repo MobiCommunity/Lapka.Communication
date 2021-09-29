@@ -17,7 +17,8 @@ namespace Lapka.Communication.Core.Entities
         public DateTime CreatedAt { get; }
 
 
-        public ShelterMessage(Guid id, Guid userId, Guid shelterId, bool isRead, string title, MessageDescription description,
+        public ShelterMessage(Guid id, Guid userId, Guid shelterId, bool isRead, string title,
+            MessageDescription description,
             FullName fullName, PhoneNumber phoneNumber, DateTime createdAt)
         {
             ValidateMessage(userId, shelterId);
@@ -33,12 +34,13 @@ namespace Lapka.Communication.Core.Entities
             CreatedAt = createdAt;
         }
 
-        public static ShelterMessage Create(Guid id, Guid userId, Guid shelterId, bool isRead, string title, string description,
-            string fullName, string phoneNumber, DateTime createdAt)
+        public static ShelterMessage Create(Guid id, Guid userId, Guid shelterId, bool isRead, string title,
+            MessageDescription description,
+            FullName fullName, PhoneNumber phoneNumber, DateTime createdAt)
         {
-            ShelterMessage shelterMessage = new ShelterMessage(id, userId, shelterId, isRead, title,
-                new MessageDescription(description), new FullName(fullName), new PhoneNumber(phoneNumber), createdAt);
-            
+            ShelterMessage shelterMessage = new ShelterMessage(id, userId, shelterId, isRead, title, description,
+                fullName, phoneNumber, createdAt);
+
             shelterMessage.AddEvent(new ShelterMessageCreated(shelterMessage));
             return shelterMessage;
         }
