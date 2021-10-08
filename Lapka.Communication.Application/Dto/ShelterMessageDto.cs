@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Lapka.Communication.Core.ValueObjects;
 
 namespace Lapka.Communication.Application.Dto
@@ -13,5 +14,6 @@ namespace Lapka.Communication.Application.Dto
         public string PhoneNumber { get; set; }
         public DateTime CreatedAt { get; set; }
         public bool IsRead { get; set; }
+        public IEnumerable<string> PhotoPaths { get; set; }
     }
 }

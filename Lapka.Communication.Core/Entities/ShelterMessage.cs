@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Lapka.Communication.Core.Events.Concrete;
 using Lapka.Communication.Core.Exceptions;
 using Lapka.Communication.Core.ValueObjects;
@@ -15,11 +17,12 @@ namespace Lapka.Communication.Core.Entities
         public FullName FullName { get; }
         public PhoneNumber PhoneNumber { get; }
         public DateTime CreatedAt { get; }
+        public IEnumerable<string> Photos { get; }
 
 
         public ShelterMessage(Guid id, Guid userId, Guid shelterId, bool isRead, string title,
-            MessageDescription description,
-            FullName fullName, PhoneNumber phoneNumber, DateTime createdAt)
+            MessageDescription description, FullName fullName, PhoneNumber phoneNumber, DateTime createdAt,
+            IEnumerable<string> photos = null)
         {
             ValidateMessage(userId, shelterId);
 
@@ -32,14 +35,15 @@ namespace Lapka.Communication.Core.Entities
             FullName = fullName;
             PhoneNumber = phoneNumber;
             CreatedAt = createdAt;
+            Photos = photos ?? Enumerable.Empty<string>();
         }
 
         public static ShelterMessage Create(Guid id, Guid userId, Guid shelterId, bool isRead, string title,
-            MessageDescription description,
-            FullName fullName, PhoneNumber phoneNumber, DateTime createdAt)
+            MessageDescription description, FullName fullName, PhoneNumber phoneNumber, DateTime createdAt,
+            IEnumerable<string> photos = null)
         {
             ShelterMessage shelterMessage = new ShelterMessage(id, userId, shelterId, isRead, title, description,
-                fullName, phoneNumber, createdAt);
+                fullName, phoneNumber, createdAt, photos);
 
             shelterMessage.AddEvent(new ShelterMessageCreated(shelterMessage));
             return shelterMessage;

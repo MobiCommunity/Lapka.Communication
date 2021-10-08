@@ -12,10 +12,9 @@ namespace Lapka.Communication.Application.Services
 {
     public interface IShelterMessageFactory
     {
-        ShelterMessage CreateFromAdoptPetMessage(CreateAdoptPetMessage message, Guid shelterId);
-        ShelterMessage CreateFromHelpShelterMessage(CreateHelpShelterMessage message);
-
-        ShelterMessage CreateFromStrayPetMessage(CreateStrayPetMessage message, Guid shelterId,
+        Task<ShelterMessage> CreateFromAdoptPetMessageAsync(CreateAdoptPetMessage message, Guid shelterId);
+        Task<ShelterMessage> CreateFromStrayPetMessageAsync(CreateStrayPetMessage message, Guid shelterId,
             IEnumerable<string> photoPaths);
+        ShelterMessage CreateFromHelpShelterMessage(CreateHelpShelterMessage message);
     }
 }

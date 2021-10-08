@@ -5,11 +5,11 @@ using Convey.CQRS.Commands;
 using Convey.CQRS.Queries;
 using Lapka.Communication.Api.Models;
 using Lapka.Communication.Api.Models.Request;
-using Lapka.Communication.Application.Commands;
 using Lapka.Communication.Application.Commands.ShelterMessages;
 using Lapka.Communication.Application.Dto;
 using Lapka.Communication.Application.Queries;
 using Lapka.Communication.Infrastructure;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -156,6 +156,7 @@ namespace Lapka.Communication.Api.Controllers
         [ProducesResponseType(typeof(object), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(object), StatusCodes.Status404NotFound)]
         [HttpPatch("{id}/read")]
+        [Authorize]
         public async Task<IActionResult> MarkAsReadMessage(Guid id)
         {
             Guid userId = await HttpContext.AuthenticateUsingJwtGetUserIdAsync();

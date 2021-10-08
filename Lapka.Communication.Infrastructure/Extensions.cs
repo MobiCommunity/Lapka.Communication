@@ -51,6 +51,7 @@ namespace Lapka.Communication.Infrastructure
                 .AddMongoRepository<ShelterDocument, Guid>("shelter")
                 .AddMongoRepository<ShelterMessageDocument, Guid>("sheltermessage")
                 .AddMongoRepository<UserConversationDocument, Guid>("usersconversations")
+                .AddMongoRepository<ShelterPetDocument, Guid>("shelterpets")
                 .AddJwt()
                 .AddRabbitMq()
                 .AddMessageOutbox()
@@ -93,6 +94,7 @@ namespace Lapka.Communication.Infrastructure
             services.AddSingleton<IElasticClient>(new ElasticClient(elasticConnectionSettings));
 
             services.AddTransient<IShelterRepository, ShelterRepository>();
+            services.AddTransient<IShelterPetRepository, ShelterPetRepository>();
             services.AddTransient<IGrpcShelterService, GrpcShelterService>();
             services.AddTransient<IGrpcPhotoService, GrpcPhotoService>();
             services.AddTransient<IGrpcPetService, GrpcPetService>();
@@ -137,6 +139,8 @@ namespace Lapka.Communication.Infrastructure
                 .UseConvey()
                 .UseAuthentication()
                 .UseRabbitMq()
+                .SubscribeEvent<ShelterPetMade>()
+                .SubscribeEvent<ShelterPetRemoved>()
                 .SubscribeEvent<ShelterAdded>()
                 .SubscribeEvent<ShelterRemoved>()
                 .SubscribeEvent<ShelterOwnerAssigned>()

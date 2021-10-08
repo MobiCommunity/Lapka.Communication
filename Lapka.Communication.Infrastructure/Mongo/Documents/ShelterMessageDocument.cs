@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Convey.Types;
 
 namespace Lapka.Communication.Infrastructure.Mongo.Documents
@@ -13,6 +14,7 @@ namespace Lapka.Communication.Infrastructure.Mongo.Documents
         public string Description { get; set; }
         public string FullName { get; set; }
         public string PhoneNumber { get; set; }
+        public IEnumerable<string> PhotoPaths { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }

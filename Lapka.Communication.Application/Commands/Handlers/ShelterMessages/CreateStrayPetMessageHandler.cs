@@ -41,7 +41,7 @@ namespace Lapka.Communication.Application.Commands.Handlers.ShelterMessages
 
             IEnumerable<string> paths = await AddPhotosToMinioAsync(command);
             
-            ShelterMessage message = _messageFactory.CreateFromStrayPetMessage(command, shelterId, paths);
+            ShelterMessage message = await _messageFactory.CreateFromStrayPetMessageAsync(command, shelterId, paths);
 
             await _repository.AddAsync(message);
             await _eventProcessor.ProcessAsync(message.Events);

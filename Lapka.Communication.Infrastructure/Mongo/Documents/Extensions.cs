@@ -14,7 +14,7 @@ namespace Lapka.Communication.Infrastructure.Mongo.Documents
         {
             return new ShelterMessage(message.Id, message.UserId, message.ShelterId, message.IsRead, message.Title,
                 new MessageDescription(message.Description), new FullName(message.FullName),
-                new PhoneNumber(message.PhoneNumber), message.CreatedAt);
+                new PhoneNumber(message.PhoneNumber), message.CreatedAt, message.PhotoPaths);
         }
 
         public static ShelterDocument AsDocument(this Shelter shelter)
@@ -35,15 +35,32 @@ namespace Lapka.Communication.Infrastructure.Mongo.Documents
                 Latitude = location.Latitude.AsDouble()
             };
         }
-        
+
         public static Location AsBusiness(this LocationDocument location)
         {
             return new Location(location.Latitude.ToString(), location.Longitude.ToString());
         }
-        
+
         public static Shelter AsBusiness(this ShelterDocument shelter)
         {
             return new Shelter(shelter.Id, shelter.Location.AsBusiness(), shelter.Owners);
+        }
+
+        public static ShelterPet AsBusiness(this ShelterPetDocument shelter)
+        {
+            return new ShelterPet(shelter.Id, shelter.PetName, shelter.Race, shelter.BirthDate, shelter.PhotoPaths);
+        }
+        
+        public static ShelterPetDocument AsDocument(this ShelterPet shelter)
+        {
+            return new ShelterPetDocument
+            {
+                Id = shelter.Id,
+                PetName = shelter.PetName,
+                Race = shelter.Race,
+                BirthDate = shelter.BirthDate,
+                PhotoPaths = shelter.PhotoPaths
+            };
         }
 
         public static ShelterMessageDocument AsDocument(this ShelterMessage message)
@@ -58,7 +75,8 @@ namespace Lapka.Communication.Infrastructure.Mongo.Documents
                 Description = message.Description.Value,
                 FullName = message.FullName.Value,
                 PhoneNumber = message.PhoneNumber.Value,
-                CreatedAt = message.CreatedAt
+                CreatedAt = message.CreatedAt,
+                PhotoPaths = message.Photos
             };
         }
 
@@ -73,7 +91,8 @@ namespace Lapka.Communication.Infrastructure.Mongo.Documents
                 FullName = message.FullName,
                 PhoneNumber = message.PhoneNumber,
                 CreatedAt = message.CreatedAt,
-                IsRead = message.IsRead
+                IsRead = message.IsRead,
+                PhotoPaths = message.PhotoPaths
             };
         }
 
@@ -104,7 +123,7 @@ namespace Lapka.Communication.Infrastructure.Mongo.Documents
 
         public static UserMessage AsBusiness(this UserMessageDocument message)
         {
-            return new UserMessage(message.SenderUserId,  message.Message, message.IsReadByReceiver, message.CreatedAt);
+            return new UserMessage(message.SenderUserId, message.Message, message.IsReadByReceiver, message.CreatedAt);
         }
 
         public static UserMessageDocument AsDocument(this UserMessage message)

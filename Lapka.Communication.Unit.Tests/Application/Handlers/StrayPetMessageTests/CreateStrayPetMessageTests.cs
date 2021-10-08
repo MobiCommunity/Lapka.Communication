@@ -79,7 +79,7 @@ namespace Lapka.Communication.Unit.Tests.Application.Handlers.StrayPetMessageTes
                 shelter
             });
 
-            _shelterMessageFactory.CreateFromStrayPetMessage(command, message.ShelterId, Arg.Any<ICollection<string>>())
+            _shelterMessageFactory.CreateFromStrayPetMessageAsync(command, message.ShelterId, Arg.Any<ICollection<string>>())
                 .Returns(message);
 
             await Act(command);
